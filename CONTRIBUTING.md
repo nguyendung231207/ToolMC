@@ -50,7 +50,7 @@ Feature requests are always encouraged! Please open an Issue with the `enhanceme
 1. **Fork the Repository:** Click the **Fork** button on GitHub to create a copy under your account.
 2. **Clone your fork:**
    ```bash
-   git clone https://github.com/<your-username>/toolmc.git
+   git clone https://github.com/nguyendung231207/ToolMC.git
    cd toolmc
    ```
 3. **Create a topic branch:**
