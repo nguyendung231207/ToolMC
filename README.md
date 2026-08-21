@@ -63,7 +63,7 @@ The project is cleanly split into two components:
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/<your-username>/toolmc.git
+git clone https://github.com/nguyendung231207/ToolMC.git
 cd toolmc
 
 # 2. Install dependencies
