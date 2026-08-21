@@ -1,0 +1,2036 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="./assets/css/dashboard.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <title>ToolMC</title>
+  <style>
+    /* Force clickability for all interactive elements */
+    body {
+      pointer-events: auto !important;
+    }
+
+    #app-layout {
+      pointer-events: auto !important;
+    }
+
+    #app-titlebar {
+      pointer-events: auto !important;
+    }
+
+    #topNav {
+      pointer-events: auto !important;
+    }
+
+    .tab-btn {
+      pointer-events: auto !important;
+    }
+
+    .tab-content {
+      pointer-events: auto !important;
+    }
+
+    /* Custom style for accounts layout */
+    .accounts-layout {
+      display: grid;
+      /* grid-template-columns: 1.6fr 1fr; */
+      gap: 20px;
+      align-items: start;
+      margin-top: 15px;
+    }
+
+    .account-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    .account-table th {
+      text-align: left;
+      padding: 10px 12px;
+      color: rgba(255, 255, 255, 0.5);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      font-weight: 600;
+    }
+
+    .account-table td {
+      padding: 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      color: rgba(255, 255, 255, 0.85);
+      vertical-align: middle;
+    }
+
+    .account-table tr:hover td {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .badge-crack {
+      background: rgba(245, 158, 11, 0.15);
+      color: #f59e0b;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .badge-premium {
+      background: rgba(139, 92, 246, 0.15);
+      color: #a78bfa;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- ========== TITLEBAR (Draggable) ========== -->
+  <div id="app-titlebar">
+    <div class="titlebar-logo">
+      <img src="./assets/icons/icon.png" width="20" height="20" alt="Logo" />
+      <span>ToolMC</span>
+      <span id="versionString" class="titlebar-version">v3.1</span>
+    </div>
+    <div class="titlebar-controls">
+      <button id="btnMinimize" class="titlebar-btn win-min" title="Minimize"></button>
+      <button id="btnMaximize" class="titlebar-btn win-max" title="Maximize"></button>
+      <button id="btnClose" class="titlebar-btn win-close" title="Close"></button>
+    </div>
+  </div>
+
+  <!-- ========== MAIN APP LAYOUT ========== -->
+  <div id="app-layout">
+    <!-- ========== TOP NAVIGATION ========== -->
+    <header id="topNav">
+      <div class="nav-left">
+        <!-- Logo -->
+        <div class="nav-logo">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="logoGrad" x1="0" y1="0" x2="28" y2="28" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#8b5cf6" />
+                <stop offset="100%" stop-color="#06b6d4" />
+              </linearGradient>
+            </defs>
+            <path d="M14 2L26 8V20L14 26L2 20V8L14 2Z" fill="url(#logoGrad)" rx="4" />
+            <text x="14" y="19" font-family="Inter, sans-serif" font-size="12" font-weight="700" fill="white"
+              text-anchor="middle">
+              T
+            </text>
+          </svg>
+        </div>
+
+        <!-- Tab Navigation - Pill Style -->
+        <nav class="nav-tabs" id="navTabs">
+          <button class="tab-btn active" data-tab="overview" data-group="main">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect width="7" height="9" x="3" y="3" rx="1" />
+              <rect width="7" height="5" x="14" y="3" rx="1" />
+              <rect width="7" height="9" x="14" y="12" rx="1" />
+              <rect width="7" height="5" x="3" y="16" rx="1" />
+            </svg>
+            Tổng quan
+          </button>
+          <button class="tab-btn" data-tab="accounts" data-group="main">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+              <circle cx="12" cy="7" r="4" />
+            </svg>
+            Tài khoản
+          </button>
+          <button class="tab-btn" data-tab="botting" data-group="main">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect width="18" height="10" x="3" y="11" rx="2" />
+              <circle cx="12" cy="5" r="2" />
+              <path d="M12 7v4" />
+              <line x1="8" x2="8" y1="16" y2="16" />
+              <line x1="16" x2="16" y1="16" y2="16" />
+            </svg>
+            Botting
+          </button>
+          <button class="tab-btn" id="navProxy" data-tab="proxy" data-group="main">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round" style="display: inline-block; vertical-align: middle;">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="2" y1="12" x2="22" y2="12"></line>
+              <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z">
+              </path>
+            </svg>
+            API Proxy
+          </button>
+
+          <!-- <button class="tab-btn" data-tab="logs" data-group="main">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+              <polyline points="14,2 14,8 20,8" />
+              <line x1="16" y1="13" x2="8" y2="13" />
+              <line x1="16" y1="17" x2="8" y2="17" />
+              <polyline points="10,9 9,9 8,9" />
+            </svg>
+            Nhật ký
+          </button> -->
+          <button class="tab-btn" data-tab="settings" data-group="main">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="3" />
+              <path
+                d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" />
+            </svg>
+            Cài đặt
+          </button>
+        </nav>
+      </div>
+
+      <div class="nav-right">
+        <!-- Screen zoom -->
+        <button class="icon-btn" id="btnFullscreen" title="Fullscreen">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="15 3 21 3 21 9" />
+            <polyline points="9 21 3 21 3 15" />
+            <line x1="21" y1="3" x2="14" y2="10" />
+            <line x1="3" y1="21" x2="10" y2="14" />
+          </svg>
+        </button>
+
+        <!-- Language Dropdown -->
+        <div class="lang-dropdown" id="langDropdown">
+          <button class="lang-btn" id="langBtn">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10" />
+              <line x1="2" y1="12" x2="22" y2="12" />
+              <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+            </svg>
+            <span id="currentLang">VI</span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="6 9 12 15 18 9" />
+            </svg>
+          </button>
+          <div class="lang-menu" id="langMenu">
+            <button class="lang-item active" data-lang="vi">Tiếng Việt</button>
+            <button class="lang-item" data-lang="en">English</button>
+            <button class="lang-item" data-lang="zh">中文</button>
+            <button class="lang-item" data-lang="ko">한국어</button>
+            <button class="lang-item" data-lang="ja">日本語</button>
+          </div>
+        </div>
+
+        <!-- Theme Toggle -->
+        <button class="icon-btn" id="themeToggleBtn" title="Toggle theme">
+          <svg id="iconSun" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="4" />
+            <path
+              d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" />
+          </svg>
+          <svg id="iconMoon" style="display: none" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round">
+            <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- ========== MAIN CONTENT AREA ========== -->
+    <main id="mainContent">
+      <!-- ======= TAB: Tổng quan (Overview) ======= -->
+      <div id="tab-overview" class="tab-content active">
+        <div class="greeting">
+          <h1>Xin chào👋</h1>
+          <p class="subtitle"></p>
+          <br />
+        </div>
+
+        <!-- Stats Cards Row -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon stat-icon-blue">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect width="18" height="10" x="3" y="11" rx="2" />
+                <circle cx="12" cy="5" r="2" />
+                <path d="M12 7v4" />
+              </svg>
+            </div>
+            <div class="stat-info">
+              <span class="stat-label">Bot đang chạy</span>
+              <span class="stat-value" id="statBotsRunning">0</span>
+            </div>
+            <div class="stat-badge stat-badge-green">Online</div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon stat-icon-green">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                <circle cx="12" cy="7" r="4" />
+              </svg>
+            </div>
+            <div class="stat-info">
+              <span class="stat-label">Tài khoản đã thêm</span>
+              <span class="stat-value" id="statAccountsAdded">0</span>
+            </div>
+            <div class="stat-badge stat-badge-blue">Tài khoản</div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon stat-icon-orange">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M5 6v12" />
+                <path d="M19 6v12" />
+                <path d="M8 6h8" />
+                <path d="M8 18h8" />
+              </svg>
+            </div>
+            <div class="stat-info">
+              <span class="stat-label">Proxy đang dùng</span>
+              <span class="stat-value" id="statProxiesUsed">0</span>
+            </div>
+            <div class="stat-badge stat-badge-orange">Proxy</div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon stat-icon-red">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10" />
+                <polyline points="12 6 12 12 16 14" />
+              </svg>
+            </div>
+            <div class="stat-info">
+              <span class="stat-label">Thời gian chạy</span>
+              <span class="stat-value" id="statUptime">00:00:00</span>
+            </div>
+            <div class="stat-badge stat-badge-gray">Uptime</div>
+          </div>
+        </div>
+        <!-- <div class="stats-charts-grid">
+          <div class="dashboard-card">
+            <div class="card-header">
+              <h3 class="card-title">Hoạt động Bot</h3>
+              <span class="badge badge-green">Live</span>
+            </div>
+            <div class="chart-placeholder" id="chartBotActivity">
+              <div class="chart-bar-group">
+                <div class="chart-bar" style="height: 60%"></div>
+                <div class="chart-bar" style="height: 80%"></div>
+                <div class="chart-bar" style="height: 45%"></div>
+                <div class="chart-bar" style="height: 90%"></div>
+                <div class="chart-bar" style="height: 70%"></div>
+                <div class="chart-bar" style="height: 55%"></div>
+                <div class="chart-bar" style="height: 85%"></div>
+                <div class="chart-bar" style="height: 40%"></div>
+              </div>
+              <div class="chart-labels">
+                <span>00h</span><span>03h</span><span>06h</span><span>09h</span>
+                <span>12h</span><span>15h</span><span>18h</span><span>21h</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="dashboard-card">
+            <div class="card-header">
+              <h3 class="card-title">Phân bố Trạng thái</h3>
+            </div>
+            <div class="stats-breakdown" id="statsBreakdown">
+              <div class="breakdown-item">
+                <span class="breakdown-dot" style="background: #22c55e"></span>
+                <span class="breakdown-label">Online</span>
+                <span class="breakdown-value" id="statOnline">0</span>
+              </div>
+              <div class="breakdown-item">
+                <span class="breakdown-dot" style="background: #ef4444"></span>
+                <span class="breakdown-label">Disconnected</span>
+                <span class="breakdown-value" id="statDisconnected">0</span>
+              </div>
+              <div class="breakdown-item">
+                <span class="breakdown-dot" style="background: #f59e0b"></span>
+                <span class="breakdown-label">Reconnecting</span>
+                <span class="breakdown-value" id="statReconnecting">0</span>
+              </div>
+              <div class="breakdown-item">
+                <span class="breakdown-dot" style="background: #8b949e"></span>
+                <span class="breakdown-label">Idle</span>
+                <span class="breakdown-value" id="statIdle">0</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="dashboard-card">
+            <div class="card-header">
+              <h3 class="card-title">API Usage</h3>
+            </div>
+            <div class="api-usage-grid" id="apiUsageGrid">
+              <div class="api-usage-item">
+                <span class="api-usage-label">Requests/Phút</span>
+                <span class="api-usage-value" id="apiReqPerMin">0</span>
+              </div>
+              <div class="api-usage-item">
+                <span class="api-usage-label">Avg Latency</span>
+                <span class="api-usage-value" id="apiAvgLatency">--</span>
+              </div>
+              <div class="api-usage-item">
+                <span class="api-usage-label">Error Rate</span>
+                <span class="api-usage-value" id="apiErrorRate">0%</span>
+              </div>
+              <div class="api-usage-item">
+                <span class="api-usage-label">Total Requests</span>
+                <span class="api-usage-value" id="apiTotalRequests">0</span>
+              </div>
+            </div>
+          </div>
+        </div> -->
+        <br />
+        <!-- Bottom Row: Current Account + Best Account -->
+        <div class="dashboard-bottom">
+          <!-- Current Account -->
+          <div class="dashboard-card flex-3">
+            <div class="card-header">
+              <h3 class="card-title">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                  <circle cx="12" cy="7" r="4" />
+                </svg>
+                Tài khoản Hiện tại
+              </h3>
+              <span class="badge badge-blue">PRO</span>
+            </div>
+            <div class="account-info">
+              <div class="account-email" id="currentAccountEmail">Chưa đăng nhập</div>
+              <div class="account-status-row">
+                <span class="status-dot status-dot-green"></span>
+                <span class="status-text">Đang hoạt động</span>
+              </div>
+            </div>
+            <div class="progress-section">
+              <div class="progress-item">
+                <div class="progress-header">
+                  <span class="progress-label">Hạn mức API</span>
+                  <span class="progress-value" id="apiLimitValue">0/0</span>
+                </div>
+                <div class="progress-bar">
+                  <div class="progress-fill" id="apiLimitBar" style="width: 0%"></div>
+                </div>
+              </div>
+              <div class="progress-item">
+                <div class="progress-header">
+                  <span class="progress-label">Bot Limits</span>
+                  <span class="progress-value" id="botLimitValue">0/0</span>
+                </div>
+                <div class="progress-bar">
+                  <div class="progress-fill" id="botLimitBar" style="width: 0%"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Best Account -->
+          <div class="dashboard-card flex-1">
+            <div class="card-header">
+              <h3 class="card-title">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polygon
+                    points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+                </svg>
+                Best Account
+              </h3>
+              <span class="badge badge-yellow">HOT</span>
+            </div>
+            <div class="best-account">
+              <div class="account-email" id="bestAccountEmail">--</div>
+              <div class="account-score-row">
+                <span class="account-score-label">Score</span>
+                <span class="account-score" id="bestAccountScore">--</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ======= TAB: Tài khoản (Accounts) ======= -->
+      <div id="tab-accounts" class="tab-content">
+        <div class="tab-header">
+          <h1>Tài khoản</h1>
+          <p class="subtitle">Quản lý danh sách tài khoản Minecraft</p>
+        </div>
+
+        <div class="accounts-layout">
+          <!-- COLUMN 1: Visual Account List -->
+          <div class="dashboard-card" style="height: 100%; display: flex; flex-direction: column; min-height: 480px;">
+            <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
+              <h3 class="card-title">Danh sách tài khoản đã thêm</h3>
+              <span class="text-muted text-sm" id="accountCount">0 tài khoản</span>
+            </div>
+            <div class="table-container" style="flex: 1; max-height: 400px; overflow-y: auto; padding: 10px;">
+              <table class="account-table">
+                <thead>
+                  <tr>
+                    <th>Tài khoản / Email</th>
+                    <th>Loại</th>
+                    <th style="text-align: right;">Hành động</th>
+                  </tr>
+                </thead>
+                <tbody id="visualAccountListBody">
+                  <!-- Javascript will populate rows here -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- COLUMN 2: Add Single & Bulk Import -->
+          <div style="display: flex; flex-direction: column; gap: 20px;">
+            <!-- Card: Add Single Account -->
+            <div class="dashboard-card">
+              <div class="card-header">
+                <h3 class="card-title">Thêm tài khoản</h3>
+              </div>
+              <div style="padding: 15px; display: flex; flex-direction: column; gap: 12px;">
+                <div class="form-group" style="margin-bottom: 0px;">
+                  <label class="form-label">Tên tài khoản hoặc Email</label>
+                  <input id="singleAccountUser" type="text" class="form-input"
+                    placeholder="Nhập tên bot hoặc email..." />
+                </div>
+                <div class="form-group" style="margin-bottom: 0px; display: none;">
+                  <label class="form-label">Mật khẩu</label>
+                  <input id="singleAccountPass" type="text" class="form-input" placeholder="Nhập mật khẩu..." />
+                </div>
+                <div class="form-group" style="margin-bottom: 0px;">
+                  <label class="form-label">Loại tài khoản</label>
+                  <select id="singleAccountType" class="form-select">
+                    <option value="offline">Crack (Offline)</option>
+                    <option value="microsoft">Premium (Microsoft - Device Code)</option>
+                  </select>
+                </div>
+                <button class="btn btn-sm btn-primary w-full" id="btnAddSingleAccount"
+                  style="margin-top: 8px; width: 100%;">
+                  + Thêm tài khoản
+                </button>
+              </div>
+            </div>
+
+            <!-- Card: Bulk Import / Export -->
+            <div class="dashboard-card">
+              <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
+                <h3 class="card-title">Nhập / Xuất hàng loạt</h3>
+                <div class="flex gap-2">
+                  <button class="btn btn-xs btn-outline" id="btnImportAccounts">Nhập File</button>
+                  <button class="btn btn-xs btn-outline" id="btnExportAccounts">Xuất File</button>
+                </div>
+              </div>
+              <div style="padding: 15px; display: flex; flex-direction: column;">
+                <textarea id="accountList" class="account-textarea" rows="6"
+                  placeholder="username:password&#10;email:password:microsoft&#10;(mỗi tài khoản 1 dòng)"
+                  style="font-family: monospace; font-size: 12px; margin-bottom: 12px; height: 120px;"></textarea>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                  <span class="text-xs text-muted">Hỗ trợ crack và premium.</span>
+                  <button class="btn btn-xs btn-destructive" id="btnClearAccounts">Xóa tất cả</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- COLUMN 3: Merged Settings (Cấu hình chung) -->
+          <div style="display: flex; flex-direction: column; gap: 20px;">
+            <!-- Card: Cấu hình chung (Merged Settings) -->
+            <div class="dashboard-card">
+              <div class="card-header">
+                <h3 class="card-title">Cấu hình chung</h3>
+              </div>
+              <div style="padding: 15px; display: flex; flex-direction: column; gap: 24px;">
+                <!-- Server Config -->
+                <div class="form-group" style="margin-bottom: 0">
+                  <label class="form-label" style="margin-bottom: 4px">Server</label>
+                  <div class="input-with-btn">
+                    <input id="newServerIP" type="text" class="form-input" placeholder="mc.hypixel.net" />
+                    <button class="btn btn-sm btn-primary" id="btnAddServer">+ Thêm</button>
+                    <select id="serverSelector" class="form-select" style="min-width: 200px">
+                      <option value="">-- Select or Add Server --</option>
+                      <option value="donutsmp.net">donutsmp.net</option>
+                      <option value="onemc.vn">onemc.vn</option>
+                      <option value="as.leafpvp.icu">as.leafpvp.icu</option>
+                      <option value="vnpvp.asia">vnpvp.asia</option>
+                      <option value="kingmc.vn">kingmc.vn</option>
+                    </select>
+                  </div>
+                </div>
+
+                <!-- Version & Delay -->
+                <div class="form-group" style="margin-bottom: 0">
+                  <label class="form-label">Version</label>
+                  <select id="versionSelect" class="form-select">
+                    <option value="auto" selected>Auto-detect</option>
+
+                    <optgroup label="Phiên bản mới (1.20 - 1.21)">
+                      <option value="1.21.4">1.21.4</option>
+                      <option value="1.21.1">1.21.1</option>
+                      <option value="1.21">1.21</option>
+                      <option value="1.20.5">1.20.5</option>
+                      <option value="1.20.1">1.20.1</option>
+                      <option value="1.20">1.20</option>
+                    </optgroup>
+
+                    <optgroup label="Phiên bản hiện đại (1.16 - 1.19)">
+                      <option value="1.19.4">1.19.4</option>
+                      <option value="1.19.2">1.19.2</option>
+                      <option value="1.18.2">1.18.2</option>
+                      <option value="1.17.1">1.17.1</option>
+                      <option value="1.16.5">1.16.5</option>
+                    </optgroup>
+                  </select>
+                </div>
+                <div class="form-group" style="margin-bottom: 0">
+                  <label class="form-label">Độ trễ (ms)</label>
+                  <input id="joinDelay" type="number" class="form-input" placeholder="1000" value="1000" />
+                </div>
+
+                <!-- Auto Commands -->
+                <div class="form-group" style="margin-bottom: 0">
+                  <label class="form-label">Auto Commands</label>
+                  <textarea id="autoCommands" class="form-textarea" rows="4"
+                    placeholder="chat /register {password} {password}&#10;delay 2000&#10;chat /login {password}&#10;delay 1000&#10;chat /afk"
+                    style="height: 187px;"></textarea>
+                </div>
+
+                <!-- Toggles -->
+                <!-- <div class="toggle-group" style="margin-top: 4px; display: flex; flex-direction: column; gap: 8px;">
+                  <label class="toggle-label">
+                    <input id="isLinear" type="checkbox" class="toggle-input" />
+                    <span class="toggle-switch"></span>
+                    <span>Join tuần tự (One by one)</span>
+                  </label>
+                  <label class="toggle-label">
+                    <input id="autoRespawn" type="checkbox" class="toggle-input" checked />
+                    <span class="toggle-switch"></span>
+                    <span>Tự động Respawn</span>
+                  </label>
+                </div> -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ======= TAB: Botting ======= -->
+      <div id="tab-botting" class="tab-content">
+        <div class="botting-layout">
+          <!-- Left: Bot List + Controls -->
+          <div class="botting-left">
+            <!-- Bot List -->
+            <div class="dashboard-card flex-grow">
+              <div class="card-header flex-between">
+                <h3 class="card-title">Danh sách Bot</h3>
+                <div class="flex gap-2 items-center">
+                  <label class="flex items-center gap-1 text-xs text-muted">
+                    <input id="autoSelect" type="checkbox" checked style="width: auto" /> Auto
+                  </label>
+                  <button id="selectAllBots" class="btn btn-xs btn-outline">All</button>
+                </div>
+              </div>
+              <ul id="botList" class="bot-list">
+                <!-- Bot items will be injected here -->
+              </ul>
+            </div>
+
+            <!-- Control Tabs -->
+            <div class="dashboard-card">
+              <ul class="control-tabs" id="controlList">
+                <li class="control-tab-btn active" data-tab="bot-controls">Controls</li>
+                <li class="control-tab-btn" data-tab="bot-inventory">Kho đồ & GUI</li>
+                <li class="control-tab-btn" data-tab="bot-script">Script</li>
+                <li class="control-tab-btn" data-tab="bot-move">Move & Look</li>
+                <li class="control-tab-btn" data-tab="bot-killaura">KillAura & AFK</li>
+                <!-- <li class="control-tab-btn" data-tab="bot-nuker">Nuker</li>
+                <li class="control-tab-btn" data-tab="bot-pathfinder">Pathfinder</li> -->
+              </ul>
+            </div>
+          </div>
+
+          <!-- Right: Control Panels -->
+          <div class="botting-right">
+            <!-- Controls Panel -->
+            <div id="bot-controls" class="control-panel active">
+              <div class="bot-control-actions">
+                <div class="bot-control-row">
+                  <button class="action-btn action-btn-green" id="btnStart">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <polygon points="5 3 19 12 5 21 5 3" />
+                    </svg>
+                    Bắt đầu
+                  </button>
+                  <button class="action-btn action-btn-red" id="btnStop">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="6" y="4" width="4" height="16" />
+                      <rect x="14" y="4" width="4" height="16" />
+                    </svg>
+                    Dừng
+                  </button>
+                  <button class="action-btn action-btn-blue" id="btnReconnect">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="23 4 23 10 17 10" />
+                      <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10" />
+                    </svg>
+                    Kết nối lại
+                  </button>
+                </div>
+                <div class="bot-control-row">
+                  <button class="action-btn action-btn-blue" id="btnDisconnect">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M18 6 6 18" />
+                      <path d="m6 6 12 12" />
+                    </svg>
+                    Ngắt kết nối
+                  </button>
+                  <button class="action-btn action-btn-orange" id="btnRespawn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+                      <path d="M3 3v5h5" />
+                    </svg>
+                    Hồi sinh
+                  </button>
+                  <button class="action-btn action-btn-gray" id="btnScoreboard">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <line x1="8" y1="6" x2="21" y2="6" />
+                      <line x1="8" y1="12" x2="21" y2="12" />
+                      <line x1="8" y1="18" x2="21" y2="18" />
+                      <line x1="3" y1="6" x2="3.01" y2="6" />
+                      <line x1="3" y1="12" x2="3.01" y2="12" />
+                      <line x1="3" y1="18" x2="3.01" y2="18" />
+                    </svg>
+                    Bảng điểm
+                  </button>
+                </div>
+              </div>
+
+              <!-- Chat & Spammer Panel (Merged) -->
+              <div style="margin-top: 1.5rem; padding-top: 1.25rem; border-top: 1px solid rgba(255, 255, 255, 0.05);">
+                <div class="form-group">
+                  <label class="form-label">Tin nhắn</label>
+                  <div class="input-with-btn">
+                    <input id="chatMsg" type="text" class="form-input" placeholder="Nhập tin nhắn..." />
+                    <button class="btn btn-primary" id="btnChat">Gửi</button>
+                  </div>
+                </div>
+                <div class="divider-text">Spammer</div>
+                <div class="two-col-grid-sm">
+                  <div class="form-group">
+                    <label class="form-label">Độ trễ (ms)</label>
+                    <input id="spamDelay" type="number" class="form-input" placeholder="1000" value="1000" />
+                  </div>
+                  <div class="toggle-group-sm">
+                    <label class="toggle-label">
+                      <input id="checkSpam" type="checkbox" class="toggle-input" />
+                      <span class="toggle-switch"></span>
+                      <span>Bật Spammer</span>
+                    </label>
+                    <label class="toggle-label">
+                      <input id="bypassChat" type="checkbox" class="toggle-input" />
+                      <span class="toggle-switch"></span>
+                      <span>Bypass</span>
+                    </label>
+                    <label class="toggle-label" title="Tắt ghi nhật ký tin nhắn chat để giảm lag UI khi chạy nhiều bot">
+                      <input id="disableChatLog" type="checkbox" class="toggle-input" />
+                      <span class="toggle-switch"></span>
+                      <span>Tắt Log Chat</span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Inventory & GUI Panel -->
+            <div id="bot-inventory" class="control-panel">
+              <!-- Server GUI Container -->
+              <div id="visualServerGUIContainer" class="hidden" style="margin-bottom: 1rem;">
+                <div id="guiHeader"
+                  class="flex items-center justify-between mb-2 text-xs font-bold text-amber-500 uppercase tracking-wider">
+                  <span>Server GUI: Loading...</span>
+                </div>
+                <div class="mc-inventory-grid" id="visualServerGUI"
+                  style="margin-bottom: 0.5rem; background: rgba(245, 158, 11, 0.05); border: 1px solid rgba(245, 158, 11, 0.2); padding: 8px; border-radius: 8px;">
+                  <!-- Dynamically populated container slots -->
+                </div>
+              </div>
+
+              <!-- Player Inventory -->
+              <div class="flex items-center justify-between mb-1">
+                <div class="text-xs text-muted-foreground uppercase font-semibold tracking-wider">Kho đồ nhân vật</div>
+                <div class="text-[10px] text-muted-foreground" id="guiActiveStatus">Kho đồ cá nhân</div>
+              </div>
+
+              <div class="inventory-display">
+                <div class="mc-inventory-grid" id="visualInventoryMain">
+                  <div class="mc-slot" data-slot="9"></div>
+                  <div class="mc-slot" data-slot="10"></div>
+                  <div class="mc-slot" data-slot="11"></div>
+                  <div class="mc-slot" data-slot="12"></div>
+                  <div class="mc-slot" data-slot="13"></div>
+                  <div class="mc-slot" data-slot="14"></div>
+                  <div class="mc-slot" data-slot="15"></div>
+                  <div class="mc-slot" data-slot="16"></div>
+                  <div class="mc-slot" data-slot="17"></div>
+                  <div class="mc-slot" data-slot="18"></div>
+                  <div class="mc-slot" data-slot="19"></div>
+                  <div class="mc-slot" data-slot="20"></div>
+                  <div class="mc-slot" data-slot="21"></div>
+                  <div class="mc-slot" data-slot="22"></div>
+                  <div class="mc-slot" data-slot="23"></div>
+                  <div class="mc-slot" data-slot="24"></div>
+                  <div class="mc-slot" data-slot="25"></div>
+                  <div class="mc-slot" data-slot="26"></div>
+                  <div class="mc-slot" data-slot="27"></div>
+                  <div class="mc-slot" data-slot="28"></div>
+                  <div class="mc-slot" data-slot="29"></div>
+                  <div class="mc-slot" data-slot="30"></div>
+                  <div class="mc-slot" data-slot="31"></div>
+                  <div class="mc-slot" data-slot="32"></div>
+                  <div class="mc-slot" data-slot="33"></div>
+                  <div class="mc-slot" data-slot="34"></div>
+                  <div class="mc-slot" data-slot="35"></div>
+                </div>
+
+                <div class="text-xs text-muted-foreground uppercase font-semibold tracking-wider mt-3 mb-1">Thanh Hotbar
+                </div>
+                <div class="mc-inventory-grid" id="visualInventoryHotbar">
+                  <div class="mc-slot" data-slot="36"></div>
+                  <div class="mc-slot" data-slot="37"></div>
+                  <div class="mc-slot" data-slot="38"></div>
+                  <div class="mc-slot" data-slot="39"></div>
+                  <div class="mc-slot" data-slot="40"></div>
+                  <div class="mc-slot" data-slot="41"></div>
+                  <div class="mc-slot" data-slot="42"></div>
+                  <div class="mc-slot" data-slot="43"></div>
+                  <div class="mc-slot" data-slot="44"></div>
+                </div>
+              </div>
+
+              <!-- Controls Row: Hotbar & Window Actions Split -->
+              <div class="grid grid-cols-2 gap-4 mt-4 pt-3 border-t border-white/5">
+                <!-- Left Column: Hotbar Controls -->
+                <div>
+                  <div class="text-[10px] text-muted-foreground uppercase font-bold tracking-wider mb-2">Thao tác Hotbar
+                  </div>
+                  <div class="flex gap-2">
+                    <select id="hotbarSlot" class="form-select text-xs py-1 h-8 flex-1">
+                      <option value="0">Slot 1</option>
+                      <option value="1">Slot 2</option>
+                      <option value="2">Slot 3</option>
+                      <option value="3">Slot 4</option>
+                      <option value="4">Slot 5</option>
+                      <option value="5">Slot 6</option>
+                      <option value="6">Slot 7</option>
+                      <option value="7">Slot 8</option>
+                      <option value="8">Slot 9</option>
+                    </select>
+                    <button class="btn btn-primary btn-sm h-8" id="btnHotbarSelect"
+                      style="padding: 0 8px; font-size: 11px;">Active</button>
+                  </div>
+                  <div class="flex gap-4 mt-2">
+                    <button class="btn btn-secondary btn-sm h-8 flex-1" id="btnUseItem" style="font-size: 11px;">Sử
+                      dụng</button>
+                    <button class="btn btn-destructive btn-sm h-8 flex-1" id="btnDrop" style="font-size: 11px;">Vứt
+                      Held</button>
+                  </div>
+                </div>
+
+                <!-- Right Column: Window & General Actions -->
+                <div>
+                  <div class="text-[10px] text-muted-foreground uppercase font-bold tracking-wider mb-2">Thao tác GUI
+                  </div>
+                  <div class="flex gap-4">
+                    <button class="btn btn-secondary btn-sm h-8 flex-1" id="btnCloseWindow"
+                      style="font-size: 11px;">Đóng GUI</button>
+                    <button class="btn btn-destructive btn-sm h-8 flex-1" id="btnDropAll" style="font-size: 11px;">Vứt
+                      hết</button>
+                  </div>
+                  <div class="flex items-center gap-1 mt-2">
+                    <input id="windowSlot" type="number" class="form-input text-xs py-1 h-8 w-14 text-center"
+                      placeholder="Slot" />
+                    <button class="btn btn-primary btn-sm h-8 flex-1" id="btnWindowClick"
+                      style="font-size: 11px; padding: 0 4px;">T.Trái</button>
+                    <button class="btn btn-primary btn-sm h-8 flex-1" id="btnWindowRightClick"
+                      style="font-size: 11px; padding: 0 4px; background: rgba(59, 130, 246, 0.2); border-color: rgba(59, 130, 246, 0.4); color: #3b82f6;">T.Phải</button>
+                    <button class="btn btn-primary btn-sm h-8 flex-1" id="btnWindowShiftClick"
+                      style="font-size: 11px; padding: 0 4px; background: rgba(168, 85, 247, 0.2); border-color: rgba(168, 85, 247, 0.4); color: #a855f7;">Shift</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Move Panel -->
+            <div id="bot-move" class="control-panel">
+              <div class="move-controls-grid">
+                <label class="move-btn" data-move="forward">
+                  <span>W</span>
+                  <input id="controlForward" type="checkbox" class="hidden" />
+                </label>
+                <label class="move-btn" data-move="left">
+                  <span>A</span>
+                  <input id="controlLeft" type="checkbox" class="hidden" />
+                </label>
+                <label class="move-btn" data-move="back">
+                  <span>S</span>
+                  <input id="controlBack" type="checkbox" class="hidden" />
+                </label>
+                <label class="move-btn" data-move="right">
+                  <span>D</span>
+                  <input id="controlRight" type="checkbox" class="hidden" />
+                </label>
+                <label class="move-btn" data-move="jump">
+                  <span>Space</span>
+                  <input id="controlJump" type="checkbox" class="hidden" />
+                </label>
+                <label class="move-btn" data-move="sprint">
+                  <span>Sprint</span>
+                  <input id="controlSprint" type="checkbox" class="hidden" />
+                </label>
+                <label class="move-btn" data-move="sneak">
+                  <span>Sneak</span>
+                  <input id="controlSneak" type="checkbox" class="hidden" />
+                </label>
+              </div>
+              <div class="form-group mt-4">
+                <label class="form-label">Linear Speed</label>
+                <input id="linearSpeed" type="number" class="form-input" value="1.0" step="0.1" />
+              </div>
+
+              <!-- Look Panel (Merged) -->
+              <div style="margin-top: 1.5rem; padding-top: 1.25rem; border-top: 1px solid rgba(255, 255, 255, 0.05);">
+                <div class="form-group">
+                  <div class="flex-between mb-2">
+                    <label class="form-label">Yaw (Horizontal)</label>
+                    <span class="text-xs text-primary" id="valLookYaw">0°</span>
+                  </div>
+                  <input id="lookYaw" type="range" min="-180" max="180" value="0" step="1" class="w-full"
+                    oninput="document.getElementById('valLookYaw').innerText = this.value + '°'" />
+                </div>
+                <div class="form-group">
+                  <div class="flex-between mb-2">
+                    <label class="form-label">Pitch (Vertical)</label>
+                    <span class="text-xs text-primary" id="valLookPitch">0°</span>
+                  </div>
+                  <input id="lookPitch" type="range" min="-90" max="90" value="0" step="1" class="w-full"
+                    oninput="document.getElementById('valLookPitch').innerText = this.value + '°'" />
+                </div>
+                <button class="btn btn-primary w-full mb-4" id="btnLook">Set Look Angle</button>
+                <div class="divider-text">Quick Directions</div>
+                <div class="direction-grid">
+                  <button class="btn btn-outline btn-sm"
+                    onclick="document.getElementById('lookYaw').value=180; document.getElementById('lookYaw').dispatchEvent(new Event('input')); document.getElementById('valLookYaw').innerText='180°'; document.getElementById('btnLook').click();">
+                    North
+                  </button>
+                  <button class="btn btn-outline btn-sm"
+                    onclick="document.getElementById('lookYaw').value=0; document.getElementById('lookYaw').dispatchEvent(new Event('input')); document.getElementById('valLookYaw').innerText='0°'; document.getElementById('btnLook').click();">
+                    South
+                  </button>
+                  <button class="btn btn-outline btn-sm"
+                    onclick="document.getElementById('lookYaw').value=90; document.getElementById('lookYaw').dispatchEvent(new Event('input')); document.getElementById('valLookYaw').innerText='90°'; document.getElementById('btnLook').click();">
+                    East
+                  </button>
+                  <button class="btn btn-outline btn-sm"
+                    onclick="document.getElementById('lookYaw').value=-90; document.getElementById('lookYaw').dispatchEvent(new Event('input')); document.getElementById('valLookYaw').innerText='-90°'; document.getElementById('btnLook').click();">
+                    West
+                  </button>
+                </div>
+                <div class="direction-grid mt-1">
+                  <button class="btn btn-outline btn-sm"
+                    onclick="document.getElementById('lookPitch').value=-90; document.getElementById('lookPitch').dispatchEvent(new Event('input')); document.getElementById('valLookPitch').innerText='-90°'; document.getElementById('btnLook').click();">
+                    Up
+                  </button>
+                  <button class="btn btn-outline btn-sm"
+                    onclick="document.getElementById('lookPitch').value=0; document.getElementById('lookPitch').dispatchEvent(new Event('input')); document.getElementById('valLookPitch').innerText='0°'; document.getElementById('btnLook').click();">
+                    Straight
+                  </button>
+                  <button class="btn btn-outline btn-sm"
+                    onclick="document.getElementById('lookPitch').value=90; document.getElementById('lookPitch').dispatchEvent(new Event('input')); document.getElementById('valLookPitch').innerText='90°'; document.getElementById('btnLook').click();">
+                    Down
+                  </button>
+                </div>
+                <div class="divider-text">Target Player</div>
+                <div class="input-with-btn">
+                  <input id="lookPlayerName" type="text" class="form-input" placeholder="Player name" />
+                  <button class="btn btn-secondary" id="btnLookAt">Look At</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- KillAura Panel -->
+            <div id="bot-killaura" class="control-panel">
+              <div class="toggle-group mb-4">
+                <label class="toggle-label">
+                  <input id="toggleKillAura" type="checkbox" class="toggle-input" />
+                  <span class="toggle-switch"></span>
+                  <span>Bật KillAura</span>
+                </label>
+              </div>
+              <div class="two-col-grid-sm">
+                <div class="form-group">
+                  <label class="form-label">Range</label>
+                  <input id="kaRange" type="number" class="form-input" value="3.5" step="0.1" />
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Attack Delay (Ticks)</label>
+                  <input id="kaDelay" type="number" class="form-input" value="12" />
+                </div>
+              </div>
+              <div class="toggle-group">
+                <label class="toggle-label">
+                  <input id="kaAnimals" type="checkbox" class="toggle-input" />
+                  <span class="toggle-switch"></span>
+                  <span>Tấn công Động vật</span>
+                </label>
+                <label class="toggle-label">
+                  <input id="kaMobs" type="checkbox" class="toggle-input" checked />
+                  <span class="toggle-switch"></span>
+                  <span>Tấn công Mobs</span>
+                </label>
+                <label class="toggle-label">
+                  <input id="kaPlayers" type="checkbox" class="toggle-input" />
+                  <span class="toggle-switch"></span>
+                  <span>Tấn công Người chơi</span>
+                </label>
+                <label class="toggle-label">
+                  <input id="kaVehicles" type="checkbox" class="toggle-input" />
+                  <span class="toggle-switch"></span>
+                  <span>Tấn công Vehicles</span>
+                </label>
+              </div>
+              <div class="toggle-group mt-2">
+                <label class="toggle-label">
+                  <input id="kaAutoCrit" type="checkbox" class="toggle-input" />
+                  <span class="toggle-switch"></span>
+                  <span>Auto Critical (Jump trước khi đánh)</span>
+                </label>
+              </div>
+              <p class="text-xs text-muted mt-2">
+                Delay tính bằng ticks (1 tick = 50ms). Range tính bằng blocks.
+              </p>
+
+              <!-- AntiAFK Section (Merged) -->
+              <div style="margin-top: 1.5rem; padding-top: 1.25rem; border-top: 1px solid rgba(255, 255, 255, 0.05);">
+                <div class="toggle-group mb-4">
+                  <label class="toggle-label">
+                    <input id="toggleAntiAFK" type="checkbox" class="toggle-input" />
+                    <span class="toggle-switch"></span>
+                    <span>Bật AntiAFK</span>
+                  </label>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Action Interval (ms)</label>
+                  <input id="afkInterval" type="number" class="form-input" placeholder="5000" value="5000" />
+                </div>
+                <p class="text-xs text-muted mt-2">Bot sẽ ngẫu nhiên di chuyển, xoay và swing arm.</p>
+              </div>
+            </div>
+
+            <!-- Script Panel -->
+            <div id="bot-script" class="control-panel">
+              <div class="form-group">
+                <label class="form-label">Manual Script</label>
+                <textarea id="manualScriptText" class="form-textarea font-mono" rows="10"
+                  placeholder="chat /say Hello&#10;delay 1000&#10;chat /say World"></textarea>
+              </div>
+              <div class="flex gap-2">
+                <button class="btn btn-primary flex-1" id="btnRunManualScript">Run Script</button>
+                <button class="btn btn-destructive" id="btnStopManualScript">Stop</button>
+              </div>
+              <p class="text-xs text-muted mt-2">
+                Syntax giống như Auto Scripts. Chạy cho các bot đã chọn.
+              </p>
+            </div>
+
+            <!-- Nuker Panel -->
+            <div id="bot-nuker" class="control-panel">
+              <div class="toggle-group mb-4">
+                <label class="toggle-label">
+                  <input id="toggleNuker" type="checkbox" class="toggle-input" />
+                  <span class="toggle-switch"></span>
+                  <span>Bật Nuker</span>
+                </label>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Target Block (ID or Name)</label>
+                <input id="nukerBlock" type="text" class="form-input" placeholder="stone" />
+              </div>
+              <div class="two-col-grid-sm">
+                <div class="form-group">
+                  <label class="form-label">Range</label>
+                  <input id="nukerRange" type="number" class="form-input" value="5" />
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Delay (ms)</label>
+                  <input id="nukerDelay" type="number" class="form-input" value="100" />
+                </div>
+              </div>
+              <p class="text-xs text-muted mt-4">
+                Nuker sẽ tìm và đào tất cả block phù hợp trong phạm vi.
+              </p>
+            </div>
+
+            <!-- Pathfinder Panel -->
+            <div id="bot-pathfinder" class="control-panel">
+              <div class="two-col-grid-sm">
+                <div class="form-group">
+                  <label class="form-label">X</label>
+                  <input id="pathX" type="number" class="form-input" placeholder="X" />
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Y</label>
+                  <input id="pathY" type="number" class="form-input" placeholder="Y" />
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Z</label>
+                  <input id="pathZ" type="number" class="form-input" placeholder="Z" />
+                </div>
+              </div>
+              <button class="btn btn-primary w-full mt-2" id="btnPathfind">Go to</button>
+            </div>
+
+            <!-- Game Output -->
+            <div class="game-output-card">
+              <!-- <div class="card-header flex-between">
+                <h3 class="card-title text-sm">Game Output</h3>
+                <div class="flex gap-4 items-center">
+                  <label class="flex items-center gap-1 text-xs text-muted">
+                    <input id="enableChat" type="checkbox" checked style="width: auto" /> Show
+                    Chat
+                  </label>
+                  <label class="flex items-center gap-1 text-xs text-muted">
+                    <input id="autoScrollChat" type="checkbox" checked style="width: auto" />
+                    Auto-scroll
+                  </label>
+                  <button class="btn btn-xs btn-outline" id="clearChat">Clear</button>
+                </div>
+              </div> -->
+              <div id="botOutputsContainer" class="bot-outputs-grid">
+                <!-- Bot output cards will be injected here dynamically -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ======= TAB: API Proxy ======= -->
+      <div id="tab-proxy" class="tab-content">
+        <div class="tab-header flex-between">
+          <div>
+            <h1>API Proxy</h1>
+            <p class="subtitle">Cấu hình dịch vụ proxy server cục bộ</p>
+          </div>
+          <div class="flex items-center gap-3">
+            <button class="btn btn-primary btn-lg" id="btnToggleProxyService">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="5 3 19 12 5 21 5 3" />
+              </svg>
+              Proxy
+            </button>
+          </div>
+        </div>
+
+        <div class="proxy-layout">
+          <!-- Right: Proxy Manager -->
+          <div class="dashboard-card flex-grow">
+            <div class="card-header flex-between">
+              <h3 class="card-title">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="3" />
+                  <path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14" />
+                </svg>
+                Quản lý Proxy
+              </h3>
+              <div class="flex gap-2 items-center">
+                <span id="proxyCheckStatusCount" class="proxy-count-badge">0/0</span>
+                <button class="btn btn-sm btn-primary" id="proxyTestStart">Test</button>
+                <button class="btn btn-sm btn-outline" id="btnCheckProxyIp"
+                  style="background: rgba(59, 130, 246, 0.1); border-color: rgba(59, 130, 246, 0.3); color: #3b82f6; font-size: 12px; font-weight: 500;">Check
+                  IP</button>
+                <button class="btn btn-sm btn-destructive" id="proxyTestStop">Stop</button>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Loại Proxy</label>
+              <select id="proxyType" class="form-select">
+                <option value="none">None</option>
+                <option value="socks4">SOCKS4</option>
+                <option value="socks5">SOCKS5</option>
+                <option value="http">HTTP</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Danh sách Proxy (ip:port:user:pass)</label>
+              <textarea id="proxyList" class="account-textarea font-mono" rows="8"
+                placeholder="127.0.0.1:1080&#10;127.0.0.1:1080:user:pass"></textarea>
+            </div>
+            <div class="api-key-warning">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+                <path d="M12 9v4" />
+                <path d="M12 17h.01" />
+              </svg>
+              Lưu ý: Không lên sử dụng proxy SOCKS4.
+            </div>
+
+            <div class="divider-text">Advanced Options</div>
+            <div class="flex space-x-3 mb-3">
+              <div class="form-group flex-1">
+                <label class="form-label">Timeout (ms)</label>
+                <input id="proxyCheckTimeout" type="number" class="form-input w-full" value="5000" />
+              </div>
+              <div class="form-group flex-1">
+                <label class="form-label">Delay (ms)</label>
+                <input id="proxyCheckDelay" type="number" class="form-input w-full" value="100" />
+              </div>
+              <div class="form-group flex-1">
+                <label class="form-label">Proxy mỗi bot</label>
+                <input id="proxyPerBot" type="number" class="form-input w-full" value="1" />
+              </div>
+            </div>
+
+            <div class="toggle-group mb-4"
+              title="Khi bật, danh sách proxy sẽ được xáo trộn ngẫu nhiên trước khi gán cho bot. Dùng khi bạn muốn phân bổ proxy không theo thứ tự.">
+              <label class="toggle-label">
+                <input id="randomizeOrder" type="checkbox" class="toggle-input" />
+                <span class="toggle-switch"></span>
+                <span>Random Order (Shuffle)</span>
+              </label>
+            </div>
+            <div class="flex gap-2">
+              <button class="btn btn-outline flex-1" id="proxyListClear">Clear List</button>
+            </div>
+          </div>
+          <!-- Proxy Test Results -->
+          <div class="dashboard-card" style="margin-top: 1rem">
+            <div class="card-header flex-between" style="margin-bottom: 0.75rem">
+              <h3 class="card-title" style="font-size: 0.875rem">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+                </svg>
+                Kết quả Test Proxy
+              </h3>
+              <div style="display: flex; gap: 0.75rem; align-items: center">
+                <!-- Summary stats inline -->
+                <div style="display: flex; gap: 0.5rem; align-items: center">
+                  <span id="proxyResultGood" style="
+                                                font-size: 0.875rem;
+                                                font-weight: 700;
+                                                color: #10b981;
+                                                min-width: 16px;
+                                                text-align: center;
+                                            ">0</span>
+                  <span style="font-size: 0.6875rem; color: rgba(255, 255, 255, 0.4)">Thành công</span>
+                </div>
+                <div style="width: 1px; height: 12px; background: rgba(255, 255, 255, 0.1)"></div>
+                <div style="display: flex; gap: 0.5rem; align-items: center">
+                  <span id="proxyResultBad" style="
+                                                font-size: 0.875rem;
+                                                font-weight: 700;
+                                                color: #ef4444;
+                                                min-width: 16px;
+                                                text-align: center;
+                                            ">0</span>
+                  <span style="font-size: 0.6875rem; color: rgba(255, 255, 255, 0.4)">Thất bại</span>
+                </div>
+                <div style="width: 1px; height: 12px; background: rgba(255, 255, 255, 0.1)"></div>
+                <div style="display: flex; gap: 0.5rem; align-items: center">
+                  <span id="proxyResultTotal" style="
+                                                font-size: 0.875rem;
+                                                font-weight: 700;
+                                                color: #3b82f6;
+                                                min-width: 16px;
+                                                text-align: center;
+                                            ">0</span>
+                  <span style="font-size: 0.6875rem; color: rgba(255, 255, 255, 0.4)">Tổng</span>
+                </div>
+              </div>
+            </div>
+            <!-- Progress bar -->
+            <div id="proxyProgressBar" style="
+                                    height: 3px;
+                                    background: rgba(255, 255, 255, 0.08);
+                                    border-radius: 2px;
+                                    margin-bottom: 0.5rem;
+                                    overflow: hidden;
+                                ">
+              <div id="proxyProgressFill" style="
+                                        height: 100%;
+                                        background: linear-gradient(90deg, #3b82f6, #10b981);
+                                        width: 0%;
+                                        transition: width 0.3s ease;
+                                        border-radius: 2px;
+                                    "></div>
+            </div>
+            <div id="proxyProgressText"
+              style="font-size: 0.75rem; color: rgba(255, 255, 255, 0.4); margin-bottom: 0.75rem">
+              Chưa test
+            </div>
+            <!-- Results list -->
+            <div style="display: flex; justify-content: flex-end; margin-bottom: 0.5rem">
+              <button class="btn btn-xs btn-outline" id="proxyResultClear">Xóa kết quả</button>
+            </div>
+            <div id="proxyTestResults" style="
+                                    max-height: 260px;
+                                    overflow-y: auto;
+                                    display: flex;
+                                    flex-direction: column;
+                                    gap: 0.375rem;
+                                ">
+              <div style="
+                                        padding: 1.5rem;
+                                        text-align: center;
+                                        color: rgba(255, 255, 255, 0.25);
+                                        font-size: 0.8125rem;
+                                        border: 1px dashed rgba(255, 255, 255, 0.1);
+                                        border-radius: 8px;
+                                    ">
+                Nhấn <strong>Test</strong> để bắt đầu kiểm tra proxy
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ======= TAB: Nhật ký (Logs) ======= -->
+      <div id="tab-logs" class="tab-content">
+        <div class="tab-header">
+          <h1>Nhật ký Lưu lượng</h1>
+          <p class="subtitle">Theo dõi hoạt động và sự kiện của bot</p>
+        </div>
+        <div class="log-container">
+          <div class="log-toolbar">
+            <div class="flex gap-2 items-center">
+              <label class="flex items-center gap-1 text-xs">
+                <input id="logShowInfo" type="checkbox" checked style="width: auto" /> Info
+              </label>
+              <label class="flex items-center gap-1 text-xs">
+                <input id="logShowSuccess" type="checkbox" checked style="width: auto" /> Success
+              </label>
+              <label class="flex items-center gap-1 text-xs">
+                <input id="logShowWarning" type="checkbox" checked style="width: auto" /> Warning
+              </label>
+              <label class="flex items-center gap-1 text-xs">
+                <input id="logShowError" type="checkbox" checked style="width: auto" /> Error
+              </label>
+            </div>
+            <div class="flex gap-2 items-center">
+              <button class="btn btn-xs btn-outline" id="logClear">Xóa</button>
+              <button class="btn btn-xs btn-outline" id="logExport">Xuất</button>
+            </div>
+          </div>
+          <ul id="logBox" class="log-box">
+            <li class="log-entry log-info">
+              <span class="log-time">[00:00:00]</span>
+              <span class="log-tag">INFO</span>
+              <span class="log-msg">Hệ thống khởi động. Sẵn sàng nhận lệnh.</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- ======= TAB: Cài đặt (Settings) ======= -->
+      <div id="tab-settings" class="tab-content">
+        <div class="tab-header">
+          <h1>Cài đặt</h1>
+          <p class="subtitle">Cấu hình ứng dụng theo nhu cầu của bạn</p>
+        </div>
+
+        <div class="settings-grid">
+          <div class="dashboard-card">
+            <div class="card-header">
+              <h3 class="card-title">Hành vi</h3>
+            </div>
+            <div class="toggle-group">
+              <label class="toggle-label">
+                <input id="isLinear" type="checkbox" class="toggle-input" checked />
+                <span class="toggle-switch"></span>
+                <span>Linear Join (One by one)</span>
+              </label>
+              <label class="toggle-label">
+                <input id="autoReconnect" type="checkbox" class="toggle-input" checked />
+                <span class="toggle-switch"></span>
+                <span>Auto Reconnect</span>
+              </label>
+              <label class="toggle-label">
+                <input id="autoRespawn" type="checkbox" class="toggle-input" checked />
+                <span class="toggle-switch"></span>
+                <span>Auto Respawn</span>
+              </label>
+            </div>
+            <div class="form-group mt-4">
+              <label class="form-label">Reconnect Delay (ms)</label>
+              <input id="reconnectDelay" type="number" class="form-input" value="5000" />
+            </div>
+          </div>
+
+          <!--   <div class="dashboard-card">
+            <div class="card-header">
+              <h3 class="card-title">Premium Features</h3>
+              <span class="badge badge-blue">PRO</span>
+            </div>
+            <div class="toggle-group">
+              <label class="toggle-label locked">
+                <input id="settingPhysics" type="checkbox" class="toggle-input" disabled />
+                <span class="toggle-switch locked"></span>
+                <span>Physics</span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect width="18" height="11" x="3" y="11" rx="2" ry="2" />
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                </svg>
+              </label>
+              <label class="toggle-label locked">
+                <input id="settingMapNotify" type="checkbox" class="toggle-input" disabled />
+                <span class="toggle-switch locked"></span>
+                <span>Map Notifications</span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect width="18" height="11" x="3" y="11" rx="2" ry="2" />
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                </svg>
+              </label>
+              <label class="toggle-label locked">
+                <input id="settingResourcePacks" type="checkbox" class="toggle-input" disabled />
+                <span class="toggle-switch locked"></span>
+                <span>Resource Packs</span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect width="18" height="11" x="3" y="11" rx="2" ry="2" />
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                </svg>
+              </label>
+            </div>
+          </div>
+ -->
+          <!-- <div class="dashboard-card">
+            <div class="card-header">
+              <h3 class="card-title">Logging</h3>
+            </div>
+            <div class="toggle-group">
+              <label class="toggle-label">
+                <input id="settingActionLog" type="checkbox" class="toggle-input" checked />
+                <span class="toggle-switch"></span>
+                <span>Actions Log</span>
+              </label>
+              <label class="toggle-label">
+                <input id="settingProxyLog" type="checkbox" class="toggle-input" />
+                <span class="toggle-switch"></span>
+                <span>Proxy Errors</span>
+              </label>
+            </div>
+          </div> -->
+
+          <!--  <div class="dashboard-card settings-danger">
+            <div class="card-header">
+              <h3 class="card-title">Danger Zone</h3>
+            </div>
+            <button class="btn btn-destructive w-full" id="btnResetConfig">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 6h18" />
+                <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
+                <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
+              </svg>
+              Reset Configuration
+            </button>
+            <button class="btn btn-outline w-full mt-2" id="btnSwitchToOldUI">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="15 18 9 12 15 6" />
+              </svg>
+              Reload
+            </button>
+          </div> -->
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- ========== NOTIFICATIONS ========== -->
+  <div id="notifications" class="notification-container"></div>
+
+  <!-- ========== TOAST ========== -->
+  <div id="toast" class="toast-message" style="display: none">
+    <span id="toastText"></span>
+  </div>
+
+  <!-- ========== GENERIC MODAL ========== -->
+  <div id="genericModal">
+    <div class="modal-box">
+      <div style="
+                        padding: 1rem 1.5rem;
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        border-bottom: 1px solid var(--border-color);
+                    ">
+        <h3 id="modalTitle" style="font-size: 16px; font-weight: 600; color: var(--text-primary); margin: 0"></h3>
+        <button id="modalCloseX" style="
+                            background: none;
+                            border: none;
+                            color: var(--text-muted);
+                            cursor: pointer;
+                            font-size: 20px;
+                            line-height: 1;
+                            padding: 0;
+                        ">
+          &times;
+        </button>
+      </div>
+      <p id="modalDescription" style="padding: 0.5rem 1.5rem 0; font-size: 13px; color: var(--text-muted); margin: 0">
+      </p>
+      <div id="modalContent" style="
+                        padding: 0.5rem 1.5rem;
+                        font-size: 13px;
+                        font-family: &quot;Inter&quot;, monospace;
+                        white-space: pre-wrap;
+                        max-height: 300px;
+                        overflow: auto;
+                    "></div>
+      <div style="padding: 0 1.5rem 1.5rem; display: flex; justify-content: flex-end">
+        <button id="modalClose" class="btn btn-primary" style="font-size: 13px">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    #modalCloseX:hover {
+      color: var(--text-primary);
+    }
+  </style>
+
+  <!-- ==================================================== -->
+  <!-- AUTHENTICATION OVERLAY (unchanged) -->
+  <!-- ==================================================== -->
+  <div id="authOverlay" style="
+                display: flex;
+                position: fixed;
+                inset: 0;
+                z-index: 9999;
+                background-image: url(&quot;./assets/img/image.png&quot;);
+                background-size: cover;
+                background-position: center;
+            ">
+    <div style="
+                    position: absolute;
+                    inset: 0;
+                    background: rgba(0, 0, 0, 0.75);
+                    backdrop-filter: blur(8px);
+                    z-index: 9998;
+                "></div>
+
+    <!-- Window Controls for Auth Overlay -->
+    <div style="
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    height: 32px;
+                    display: flex;
+                    justify-content: flex-end;
+                    align-items: center;
+                    padding: 0 16px;
+                    -webkit-app-region: drag;
+                    z-index: 10001;
+                ">
+      <div style="-webkit-app-region: no-drag; display: flex; gap: 8px">
+        <div id="minimize" class="win-btn win-min"></div>
+        <div id="maximize" class="win-btn win-max"></div>
+        <div id="close" class="win-btn win-close"></div>
+      </div>
+    </div>
+
+    <div style="
+                    position: relative;
+                    z-index: 10002;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+                    width: 100%;
+                    height: 100%;
+                ">
+      <div style="
+                        background: rgba(20, 20, 20, 0.95);
+                        border: 1px solid rgba(255, 255, 255, 0.08);
+                        border-radius: 20px;
+                        width: 100%;
+                        max-width: 440px;
+                        padding: 2.5rem;
+                        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
+                    ">
+        <!-- Logo -->
+        <div style="
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            gap: 12px;
+                            margin-bottom: 2rem;
+                            user-select: none;
+                            -webkit-user-select: none;
+                            -moz-user-select: none;
+                            -ms-user-select: none;
+                        ">
+          <div style="
+                                width: 52px;
+                                height: 52px;
+                                background: linear-gradient(135deg, #8b5cf6 0%, #06b6d4 100%);
+                                border-radius: 14px;
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                            ">
+            <span style="
+                                    font-size: 24px;
+                                    font-weight: 800;
+                                    color: white;
+                                    font-family: &quot;Inter&quot;, sans-serif;
+                                ">T</span>
+          </div>
+          <div>
+            <h1 style="
+                                    font-size: 22px;
+                                    font-weight: 800;
+                                    color: white;
+                                    margin: 0;
+                                    font-family: &quot;Inter&quot;, sans-serif;
+                                ">
+              ToolMC
+            </h1>
+            <p style="
+                                    font-size: 12px;
+                                    color: rgba(255, 255, 255, 0.5);
+                                    margin: 0;
+                                    font-family: &quot;Inter&quot;, sans-serif;
+                                ">
+              Minecraft Botting Tool
+            </p>
+          </div>
+        </div>
+
+        <!-- Auth Card -->
+        <div id="authCard">
+          <!-- Title -->
+          <!-- <h2 style="
+                                font-size: 18px;
+                                font-weight: 700;
+                                color: white;
+                                text-align: center;
+                                margin-bottom: 0.5rem;
+                                font-family: &quot;Inter&quot;, sans-serif;
+                            ">
+            Xác thực
+          </h2>
+          <p style="
+                                font-size: 13px;
+                                color: rgba(255, 255, 255, 0.5);
+                                text-align: center;
+                                margin-bottom: 2rem;
+                                font-family: &quot;Inter&quot;, sans-serif;
+                            ">
+            Nhập mã từ bot Telegram để truy cập
+          </p> -->
+
+          <!-- Microsoft Login Button (Disabled - Feature coming soon) -->
+          <button id="btnMicrosoftLogin" disabled style="
+                                width: 100%;
+                                height: 44px;
+                                background: rgba(255, 255, 255, 0.03);
+                                border: 1px solid rgba(255, 255, 255, 0.06);
+                                color: rgba(255, 255, 255, 0.3);
+                                border-radius: 10px;
+                                font-size: 0.875rem;
+                                font-weight: 500;
+                                cursor: not-allowed;
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                                gap: 10px;
+                                user-select: none;
+                                -webkit-user-select: none;
+                                -moz-user-select: none;
+                                -ms-user-select: none;
+                                font-family: &quot;Inter&quot;, sans-serif;
+                            ">
+            <svg width="20" height="20" viewBox="0 0 23 23" fill="none">
+              <rect x="1" y="1" width="10" height="10" fill="#f25022" opacity="0.4" />
+              <rect x="12" y="1" width="10" height="10" fill="#7fba00" opacity="0.4" />
+              <rect x="1" y="12" width="10" height="10" fill="#00a4ef" opacity="0.4" />
+              <rect x="12" y="12" width="10" height="10" fill="#ffb900" opacity="0.4" />
+            </svg>
+            Continue with Microsoft
+            <span style="font-size: 0.6875rem; opacity: 0.6">(Coming soon)</span>
+          </button>
+
+          <!-- Get Key Button -->
+          <button id="btnGetKey" style="
+                                width: 100%;
+                                height: 44px;
+                                background: rgba(59, 130, 246, 0.1);
+                                border: 1px solid rgba(59, 130, 246, 0.3);
+                                color: #3b82f6;
+                                border-radius: 10px;
+                                font-size: 0.875rem;
+                                font-weight: 500;
+                                cursor: pointer;
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                                gap: 8px;
+                                transition: background 0.15s;
+                                user-select: none;
+                                -webkit-user-select: none;
+                                -moz-user-select: none;
+                                -ms-user-select: none;
+                                font-family: &quot;Inter&quot;, sans-serif;
+                                margin-top: 0.75rem;
+                            ">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path
+                d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4" />
+            </svg>
+            Get Key (Free key)
+          </button>
+
+          <div id="keyOptions" style="display: none; margin-top: 0.75rem; gap: 0.5rem">
+            <button id="btnCopyKey" style="
+                                    flex: 1;
+                                    height: 36px;
+                                    background: rgba(255, 255, 255, 0.05);
+                                    border: 1px solid rgba(255, 255, 255, 0.1);
+                                    color: white;
+                                    border-radius: 7px;
+                                    font-size: 0.8125rem;
+                                    cursor: pointer;
+                                    user-select: none;
+                                    -webkit-user-select: none;
+                                    -moz-user-select: none;
+                                    -ms-user-select: none;
+                                    font-family: &quot;Inter&quot;, sans-serif;
+                                ">
+              Copy Link
+            </button>
+            <button id="btnOpenBrowser" style="
+                                    flex: 1;
+                                    height: 36px;
+                                    background: rgba(255, 255, 255, 0.05);
+                                    border: 1px solid rgba(255, 255, 255, 0.1);
+                                    color: white;
+                                    border-radius: 7px;
+                                    font-size: 0.8125rem;
+                                    cursor: pointer;
+                                    user-select: none;
+                                    -webkit-user-select: none;
+                                    -moz-user-select: none;
+                                    -ms-user-select: none;
+                                    font-family: &quot;Inter&quot;, sans-serif;
+                                ">
+              Open Browser
+            </button>
+          </div>
+
+          <!-- Divider -->
+          <div style="
+                                position: relative;
+                                text-align: center;
+                                margin: 1.5rem 0;
+                                user-select: none;
+                                -webkit-user-select: none;
+                                -moz-user-select: none;
+                                -ms-user-select: none;
+                            ">
+            <div style="
+                                    position: absolute;
+                                    top: 50%;
+                                    left: 0;
+                                    right: 0;
+                                    height: 1px;
+                                    background: rgba(255, 255, 255, 0.1);
+                                "></div>
+            <span style="
+                                    position: relative;
+                                    background: rgba(0, 0, 0, 0.85);
+                                    padding: 0 0.75rem;
+                                    color: rgba(255, 255, 255, 0.4);
+                                    font-size: 0.6875rem;
+                                    font-weight: 600;
+                                    letter-spacing: 0.5px;
+                                ">OR ENTER KEY</span>
+          </div>
+
+          <!-- Input + Login Button Row -->
+          <div style="display: flex; gap: 0.5rem">
+            <input id="authKeyInput" type="text" placeholder="Paste authentication key..." style="
+                                    flex: 1;
+                                    height: 40px;
+                                    background: rgba(255, 255, 255, 0.05);
+                                    border: 1px solid rgba(255, 255, 255, 0.1);
+                                    color: white;
+                                    border-radius: 7px;
+                                    font-size: 0.8125rem;
+                                    padding: 0 0.75rem;
+                                    font-family: &quot;Inter&quot;, monospace;
+                                " />
+            <button id="btnVerifyKey" style="
+                                    height: 40px;
+                                    padding: 0 1.5rem;
+                                    background: rgba(16, 185, 129, 0.1);
+                                    border: 1px solid rgba(16, 185, 129, 0.3);
+                                    color: #10b981;
+                                    border-radius: 7px;
+                                    font-size: 0.8125rem;
+                                    font-weight: 500;
+                                    cursor: pointer;
+                                    white-space: nowrap;
+                                    transition: background 0.15s;
+                                    user-select: none;
+                                    -webkit-user-select: none;
+                                    -moz-user-select: none;
+                                    -ms-user-select: none;
+                                    font-family: &quot;Inter&quot;, sans-serif;
+                                ">
+              Login
+            </button>
+          </div>
+
+          <!-- Footer -->
+          <div style="
+                                margin-top: 2rem;
+                                padding-top: 1.5rem;
+                                border-top: 1px solid rgba(255, 255, 255, 0.05);
+                                text-align: center;
+                                user-select: none;
+                                -webkit-user-select: none;
+                                -moz-user-select: none;
+                                -ms-user-select: none;
+                            ">
+            <p style="
+                                    color: rgba(255, 255, 255, 0.3);
+                                    font-size: 0.6875rem;
+                                    font-family: &quot;Inter&quot;, sans-serif;
+                                ">
+              Free key valid for 24 hours - Contact Telegram @dungdzvclxx
+            </p>
+          </div>
+        </div>
+
+        <!-- Loading State -->
+        <div id="authLoadingState" style="display: none; text-align: center">
+          <div class="loader-ring" style="margin: 0 auto 1.5rem"></div>
+          <p id="loadingMessage" style="
+                                color: rgba(255, 255, 255, 0.7);
+                                font-family: &quot;Inter&quot;, sans-serif;
+                                font-size: 14px;
+                            ">
+            Loading...
+          </p>
+        </div>
+
+        <!-- Auth Status -->
+        <div id="authStatus" style="display: none"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Auth Overlay Styles -->
+  <style>
+    /* Auth overlay - only block when visible */
+    #authOverlay {
+      z-index: 99999 !important;
+      pointer-events: all !important;
+    }
+
+    #authOverlay[style*="display: none"] {
+      pointer-events: none !important;
+    }
+
+    #authOverlay[style*="display:none"] {
+      pointer-events: none !important;
+    }
+
+    .loader-ring {
+      display: inline-block;
+      width: 60px;
+      height: 60px;
+      border: 4px solid rgba(255, 255, 255, 0.1);
+      border-top: 4px solid #3b82f6;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    #btnMicrosoftLogin:hover {
+      background: rgba(255, 255, 255, 0.1) !important;
+    }
+
+    #btnMicrosoftLogin:active {
+      background: rgba(255, 255, 255, 0.15) !important;
+    }
+
+    #keyOptions.show {
+      display: flex !important;
+    }
+
+    #btnVerifyKey:hover {
+      background: rgba(16, 185, 129, 0.15) !important;
+    }
+
+    #btnCopyKey:hover,
+    #btnOpenBrowser:hover {
+      background: rgba(255, 255, 255, 0.08) !important;
+    }
+
+    #authKeyInput:focus {
+      outline: none;
+      border-color: rgba(59, 130, 246, 0.5) !important;
+    }
+
+    #authKeyInput::placeholder {
+      color: rgba(255, 255, 255, 0.3);
+    }
+  </style>
+
+  <!-- Modal System for Viewer -->
+  <style>
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(4px);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.2s ease-in-out;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-content {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      width: 90%;
+      max-width: 800px;
+      max-height: 90vh;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+      transform: scale(0.95) translateY(10px);
+      transition: all 0.2s ease-in-out;
+    }
+
+    .modal-overlay.active .modal-content {
+      transform: scale(1) translateY(0);
+    }
+
+    .modal-header {
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-title {
+      font-weight: 600;
+      font-size: 1.1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .modal-close {
+      cursor: pointer;
+      color: var(--text-muted);
+      padding: 4px;
+      border-radius: 6px;
+      transition: 0.2s;
+    }
+
+    .modal-close:hover {
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .modal-body {
+      padding: 0;
+      flex: 1;
+      min-height: 500px;
+      display: flex;
+      flex-direction: column;
+      background: #000;
+      border-bottom-left-radius: 12px;
+      border-bottom-right-radius: 12px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .btn-viewer-icon {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      padding: 4px;
+      border-radius: 4px;
+      transition: 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .btn-viewer-icon:hover {
+      color: var(--primary);
+      background: rgba(59, 130, 246, 0.1);
+    }
+  </style>
+
+  <script type="module" src="./src/bot-manager.js"></script>
+  <script type="module" src="./src/index.js"></script>
+  <script type="module" src="./src/dashboard.js"></script>
+  <script type="module" src="./src/auth.js"></script>
+  <script type="module" src="./src/proxy-manager.js"></script>
+  <script type="module" src="./src/server-manager.js"></script>
+</body>
+
+</html>

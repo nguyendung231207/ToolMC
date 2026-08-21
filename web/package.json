@@ -1,0 +1,9 @@
+{
+    "name": "trafficermc-auth",
+    "version": "1.0.0",
+    "dependencies": {
+        "jsonwebtoken": "^9.0.0",
+        "@vercel/kv": "^1.0.1",
+        "redis": "^4.6.0"
+    }
+}

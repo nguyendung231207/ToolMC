@@ -1,0 +1,53 @@
+{
+  "name": "toolmc",
+  "version": "1.0.0",
+  "description": "A Minecraft botting tool with Anti-AFK, Chat spammer, Inventory/Chest manager features.",
+  "main": "./out/main/index.js",
+  "author": "xuandung",
+  "scripts": {
+    "format": "prettier --write .",
+    "lint": "eslint . --ext .js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix",
+    "start": "electron-vite preview",
+    "dev": "electron-vite dev",
+    "build": "electron-vite build",
+    "postinstall": "electron-builder install-app-deps",
+    "build:unpack": "npm run build && electron-builder --dir",
+    "build:win": "npm run build && node scripts/compile-bytenode.cjs && electron-builder --win",
+    "build:mac": "npm run build && node scripts/compile-bytenode.cjs && electron-builder --mac",
+    "build:linux": "npm run build && node scripts/compile-bytenode.cjs && electron-builder --linux",
+    "build:win-raw": "npm run build && electron-builder --win"
+  },
+  "dependencies": {
+    "@electron-toolkit/preload": "^3.0.0",
+    "@electron-toolkit/utils": "^3.0.0",
+    "axios": "^1.16.1",
+    "bytenode": "^1.5.7",
+    "canvas": "^3.2.0",
+    "electron-store": "^8.2.0",
+    "http-proxy-agent": "^7.0.0",
+    "https-proxy-agent": "^7.0.0",
+    "minecraft-assets": "^1.17.0",
+    "minecraft-protocol": "^1.66.2",
+    "mineflayer": "^4.37.1",
+    "mineflayer-dashboard": "^2.0.1",
+    "mineflayer-pathfinder": "^2.4.5",
+    "mineflayer-radar": "^0.0.2",
+    "mineflayer-web-inventory": "^1.8.5",
+    "node-machine-id": "^1.1.12",
+    "prismarine-viewer": "^1.33.0",
+    "sharp": "^0.34.5",
+    "socks": "^2.8.3"
+  },
+  "devDependencies": {
+    "@electron-toolkit/eslint-config": "^1.0.2",
+    "@electron-toolkit/eslint-config-prettier": "^2.0.0",
+    "electron": "^28.2.0",
+    "electron-builder": "^24.9.1",
+    "electron-vite": "^2.0.0",
+    "eslint": "^8.56.0",
+    "javascript-obfuscator": "^4.2.2",
+    "prettier": "^3.2.4",
+    "rollup-obfuscator": "^4.1.1",
+    "vite": "^5.0.12"
+  }
+}

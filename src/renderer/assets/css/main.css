@@ -1,0 +1,650 @@
+@import './base.css';
+
+/* Utility & Layout */
+body {
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+  margin: 0;
+  overflow: hidden;
+}
+
+.flex-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.gap-2 {
+  gap: 0.5rem;
+}
+
+/* App Shell - Removed conflicting grid definitions to respect inline styles in index.html */
+/* The layout is handled by inline styles in index.html and explicit Flexbox/Grid classes */
+
+
+/* Sidebar Styles */
+.sidebar {
+  background-color: hsl(var(--card));
+  border-right: 1px solid hsl(var(--border));
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+}
+
+.logo-area {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+  padding-left: 8px;
+}
+
+.logo-area img {
+  width: 32px;
+  height: 32px;
+}
+
+.logo-area span {
+  font-weight: 700;
+  font-size: 22px;
+  letter-spacing: -0.5px;
+}
+
+.nav-links {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  padding: 10px 14px;
+  border-radius: var(--radius);
+  color: hsl(var(--muted-foreground));
+  font-size: 18px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.nav-item:hover {
+  color: hsl(var(--foreground));
+  background-color: hsl(var(--accent));
+}
+
+/* Bot List Item */
+.botListItem {
+  padding: 8px 10px;
+  cursor: pointer;
+  border-radius: var(--radius);
+  font-size: 17px;
+  color: hsl(var(--muted-foreground));
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+}
+
+.botListItem:hover {
+  background-color: hsl(var(--muted));
+  color: hsl(var(--foreground));
+}
+
+.botListItem.selected {
+  background-color: hsl(var(--secondary));
+  color: hsl(var(--secondary-foreground));
+  font-weight: 600;
+}
+
+.nav-item.active {
+  background-color: hsl(var(--secondary));
+  color: hsl(var(--foreground));
+}
+
+.nav-item svg {
+  margin-right: 10px;
+  width: 18px;
+  height: 18px;
+}
+
+.proxy-status-badge {
+  transition: all 0.3s ease;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Main Content Area */
+.main-content {
+  background-color: hsl(var(--background));
+  padding: 32px;
+  overflow-y: auto;
+  height: 100vh;
+}
+
+/* Typography */
+h1 {
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  margin-bottom: 8px;
+}
+
+h2 {
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: -0.5px;
+  margin-bottom: 16px;
+  margin-top: 24px;
+}
+
+p.description {
+  color: hsl(var(--muted-foreground));
+  font-size: 14px;
+  margin-bottom: 24px;
+}
+
+/* Components: Card */
+.card {
+  border: 1px solid hsl(var(--border));
+  background-color: hsl(var(--card));
+  color: hsl(var(--card-foreground));
+  border-radius: var(--radius);
+  padding: 24px;
+  margin-bottom: 16px;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+.card-header {
+  margin-bottom: 16px;
+}
+
+.card-title {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.card-description {
+  font-size: 13px;
+  color: hsl(var(--muted-foreground));
+}
+
+/* Components: Input & Textarea */
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+label {
+  font-size: 16px;
+  font-weight: 500;
+  color: hsl(var(--foreground));
+}
+
+input[type="text"],
+input[type="number"],
+input[type="password"],
+textarea,
+select {
+  width: 100%;
+  height: 44px;
+  border-radius: var(--radius);
+  border: 1px solid hsl(var(--input));
+  background-color: transparent;
+  padding: 0 12px;
+  font-size: 16px;
+  color: hsl(var(--foreground));
+  transition: all 0.2s;
+  outline: none;
+}
+
+/* Make select generic look like shadcn trigger */
+select {
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+  background-position: right 0.5rem center;
+  background-repeat: no-repeat;
+  background-size: 1.5em 1.5em;
+  padding-right: 2.5rem;
+}
+
+/* Light mode arrow update */
+.light select {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23374151' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+}
+
+select option {
+  background-color: hsl(var(--popover));
+  color: hsl(var(--popover-foreground));
+}
+
+
+textarea {
+  height: auto;
+  min-height: 80px;
+  padding: 8px 12px;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: hsl(var(--ring));
+  box-shadow: 0 0 0 1px hsl(var(--ring));
+}
+
+/* Components: Button */
+button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius);
+  font-weight: 500;
+  height: 44px;
+  padding: 0 20px;
+  font-size: 16px;
+  transition: all 0.2s;
+  cursor: pointer;
+  border: none;
+  /* Reset default */
+}
+
+button.primary {
+  background-color: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+}
+
+button.primary:hover {
+  opacity: 0.9;
+}
+
+button.secondary {
+  background-color: hsl(var(--secondary));
+  color: hsl(var(--secondary-foreground));
+}
+
+button.secondary:hover {
+  background-color: hsl(var(--secondary) / 0.8);
+}
+
+button.destructive {
+  background-color: hsl(var(--destructive));
+  color: hsl(var(--destructive-foreground));
+}
+
+button.destructive:hover {
+  opacity: 0.9;
+}
+
+button.outline {
+  background-color: transparent;
+  border: 1px solid hsl(var(--input));
+  color: hsl(var(--foreground));
+}
+
+button.outline:hover {
+  background-color: hsl(var(--accent));
+  color: hsl(var(--accent-foreground));
+}
+
+/* Tabs Content Visibility */
+.tab-pane {
+  display: none;
+}
+
+.tab-pane.active {
+  display: block !important;
+}
+
+/* Control Tabs visibility */
+.control-tab {
+  display: none;
+}
+
+.control-tab.active {
+  display: block !important;
+}
+
+/* Grid Helpers */
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4px;
+}
+
+.grid-4 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 4px;
+}
+
+.space-y-4>*+* {
+  margin-top: 1rem;
+}
+
+.separator-text {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  color: hsl(var(--muted-foreground));
+  font-size: 10px;
+  text-transform: uppercase;
+  font-weight: 600;
+  margin: 12px 0 8px 0;
+}
+
+.separator-text::before,
+.separator-text::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid hsl(var(--border));
+}
+
+.separator-text:not(:empty)::before {
+  margin-right: .5em;
+}
+
+.separator-text:not(:empty)::after {
+  margin-left: .5em;
+}
+
+.flex-row {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.flex-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Chat Box Specifics */
+#chatBox,
+#proxyLogbox {
+  background-color: hsl(var(--muted));
+  border-radius: var(--radius);
+  padding: 12px;
+  font-family: monospace;
+  font-size: 12px;
+}
+
+#proxyLogbox li {
+  margin-bottom: 6px;
+  padding: 6px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+#proxyLogbox li.success {
+  border-left: 3px solid #22c55e;
+  background: rgba(34, 197, 94, 0.05);
+}
+
+#proxyLogbox li.fail {
+  border-left: 3px solid #ef4444;
+  background: rgba(239, 68, 68, 0.05);
+}
+
+.space-h {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Notifications */
+.notification-container {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  z-index: 50;
+}
+
+.toast {
+  background-color: hsl(var(--card));
+  color: hsl(var(--card-foreground));
+  border: 1px solid hsl(var(--border));
+  padding: 12px 16px;
+  border-radius: var(--radius);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  min-width: 300px;
+  animation: slide-in 0.3s ease-out;
+}
+
+@keyframes slide-in {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Monitor Grid */
+.grid-monitor {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1rem;
+}
+
+.monitor-card {
+  background: hsl(var(--card));
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--radius);
+  overflow: hidden;
+  position: relative;
+  aspect-ratio: 16 / 9;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.2s;
+}
+
+.monitor-card.selected {
+  border-color: hsl(var(--primary));
+  box-shadow: 0 0 0 2px hsl(var(--primary));
+}
+
+.monitor-card:hover {
+  border-color: hsl(var(--primary));
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.monitor-card .header {
+  background: hsl(var(--muted));
+  padding: 6px 10px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid hsl(var(--border));
+  user-select: none;
+}
+
+.monitor-checkbox {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+.monitor-stop-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: rgba(200, 0, 0, 0.8);
+  color: white;
+  border-radius: 4px;
+  padding: 2px 6px;
+  font-size: 10px;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.2s;
+  z-index: 10;
+}
+
+.monitor-card:hover .monitor-stop-btn {
+  opacity: 1;
+}
+
+.monitor-card .body {
+  flex: 1;
+  position: relative;
+  background: #111;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.monitor-play-btn {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: white;
+  color: black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.2s;
+  opacity: 0.8;
+}
+
+.monitor-play-btn:hover {
+  transform: scale(1.1);
+  opacity: 1;
+}
+
+.monitor-iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+.monitor-loader {
+  width: 24px;
+  height: 24px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+/* Minecraft UI Elements */
+.mc-font {
+  font-size: 1.2rem;
+}
+
+.mc-scoreboard {
+  background: rgba(0, 0, 0, 0.4);
+  padding: 10px;
+  border-radius: 4px;
+  line-height: 1.1;
+  color: #fff;
+  text-shadow: 1px 1px #000;
+}
+
+.mc-slot {
+  width: 32px;
+  height: 32px;
+  background-color: #8B8B8B;
+  border: 2px solid;
+  border-top-color: #373737;
+  border-left-color: #373737;
+  border-bottom-color: #FFFFFF;
+  border-right-color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  box-sizing: border-box;
+  padding: 2px;
+}
+
+.mc-item-img {
+  width: 24px;
+  height: 24px;
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+  pointer-events: none;
+}
+
+.mc-inventory-grid {
+  display: grid;
+  grid-template-columns: repeat(9, 32px);
+  gap: 2px;
+  background-color: #C6C6C6;
+  padding: 4px;
+  border: 3px solid;
+  border-top-color: #FFFFFF;
+  border-left-color: #FFFFFF;
+  border-bottom-color: #555555;
+  border-right-color: #555555;
+  margin: 0 auto;
+  width: fit-content;
+  box-sizing: content-box;
+}
+
+.heart-bar,
+.hunger-bar {
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: flex-end;
+  gap: 1px;
+}
+
+.mc-icon {
+  width: 12px;
+  height: 12px;
+  display: inline-block;
+  line-height: 1;
+}
+
+.mc-item-count {
+  position: absolute;
+  bottom: 0px;
+  right: 1px;
+  font-size: 14px;
+  color: white;
+  text-shadow: 1px 1px #000;
+  pointer-events: none;
+}
+
+.mc-item-name {
+  font-size: 9px;
+  color: #ddd;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 100%;
+}

@@ -1,0 +1,46 @@
+# Dependencies
+node_modules
+.pnp
+.pnp.js
+
+# Build outputs & Bundles
+dist
+out
+build
+*.asar
+
+# Environment variables & Secret Keys (CRITICAL - DO NOT COMMIT)
+.env
+.env.*
+!.env.example
+web/.env
+web/.env.*
+!web/.env.example
+
+# Temporary captcha maps & Bot session data
+captchas/*
+!captchas/.gitkeep
+bot_sessions/*
+!bot_sessions/.gitkeep
+
+# Vercel & Cloud deployment metadata
+.vercel
+
+# Logs
+*.log
+*.log*
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Editor & OS files
+.DS_Store
+Thumbs.db
+.vscode
+.idea
+.agent
+*.swp
+*.swo
+
+# Vite temporary config backups
+electron.vite.config.*.mjs

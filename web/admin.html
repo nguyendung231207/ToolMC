@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ToolMc Admin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        border: 'hsl(217.2 32.6% 17.5%)',
+                        input: 'hsl(217.2 32.6% 17.5%)',
+                        background: 'hsl(222.2 84% 4.9%)',
+                        foreground: 'hsl(210 40% 98%)',
+                        primary: { DEFAULT: 'hsl(210 40% 98%)', foreground: 'hsl(222.2 47.4% 11.2%)' },
+                        secondary: { DEFAULT: 'hsl(217.2 32.6% 17.5%)', foreground: 'hsl(210 40% 98%)' },
+                        destructive: { DEFAULT: 'hsl(0 62.8% 30.6%)', foreground: 'hsl(210 40% 98%)' },
+                        muted: { DEFAULT: 'hsl(217.2 32.6% 17.5%)', foreground: 'hsl(215 20.2% 65.1%)' },
+                        accent: { DEFAULT: 'hsl(217.2 32.6% 17.5%)', foreground: 'hsl(210 40% 98%)' },
+                        card: { DEFAULT: 'hsl(222.2 84% 4.9%)', foreground: 'hsl(210 40% 98%)' }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+
+<body class="bg-background text-foreground">
+    <!-- Auth Modal -->
+    <div id="authModal" class="fixed inset-0 bg-black/80 flex items-center justify-center z-50">
+        <div class="bg-card border border-border rounded-lg p-8 w-full max-w-md">
+            <h2 class="text-2xl font-bold mb-2">Admin Login</h2>
+            <p class="text-muted-foreground mb-6">Enter password</p>
+            <input id="passwordInput" type="password"
+                class="w-full mb-4 px-3 py-2 bg-background border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-ring"
+                placeholder="Password">
+            <button id="loginBtn"
+                class="w-full bg-primary text-primary-foreground px-4 py-2 rounded-md font-medium hover:bg-primary/90">
+                Login
+            </button>
+            <p id="authError" class="text-destructive text-sm text-center mt-2"></p>
+        </div>
+    </div>
+
+    <!-- Dashboard -->
+    <div id="dashboard" class="hidden min-h-screen">
+        <!-- Header -->
+        <header class="border-b border-border sticky top-0 bg-background/95 backdrop-blur z-40">
+            <div class="container mx-auto px-6 py-4 flex items-center justify-between">
+                <div>
+                    <h1 class="text-2xl font-bold">ToolMc Admin</h1>
+                    <p class="text-sm text-muted-foreground">Manage keys & security</p>
+                </div>
+                <button id="logoutBtn" class="px-4 py-2 bg-secondary rounded-md hover:bg-secondary/80">Logout</button>
+            </div>
+        </header>
+
+        <div class="container mx-auto px-6 py-8">
+            <!-- Stats Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+                <div class="bg-card border border-border rounded-lg p-6">
+                    <p class="text-sm font-medium text-muted-foreground">Active Keys</p>
+                    <p class="text-3xl font-bold mt-2" id="activeKeys">0</p>
+                </div>
+                <div class="bg-card border border-border rounded-lg p-6">
+                    <p class="text-sm font-medium text-muted-foreground">Blocked IPs</p>
+                    <p class="text-3xl font-bold mt-2" id="blockedIpsCount">0</p>
+                </div>
+                <div class="bg-card border border-border rounded-lg p-6">
+                    <p class="text-sm font-medium text-muted-foreground">Key Sharing Attempts</p>
+                    <p class="text-3xl font-bold mt-2 text-destructive" id="sharingAttempts">0</p>
+                </div>
+                <div class="bg-card border border-border rounded-lg p-6">
+                    <p class="text-sm font-medium text-muted-foreground">Total Requests</p>
+                    <p class="text-3xl font-bold mt-2" id="totalRequests">0</p>
+                </div>
+            </div>
+
+            <!-- Tabs -->
+            <div class="bg-card border border-border rounded-lg">
+                <div class="border-b border-border flex overflow-x-auto">
+                    <button class="tab-btn px-6 py-3 font-medium border-b-2 border-primary" data-tab="create">Create
+                        Key</button>
+                    <button class="tab-btn px-6 py-3 font-medium border-b-2 border-transparent hover:bg-secondary/50"
+                        data-tab="keys">Active Keys</button>
+                    <button class="tab-btn px-6 py-3 font-medium border-b-2 border-transparent hover:bg-secondary/50"
+                        data-tab="blocked">Blocked IPs</button>
+                    <button class="tab-btn px-6 py-3 font-medium border-b-2 border-transparent hover:bg-secondary/50"
+                        data-tab="analytics">Analytics</button>
+                </div>
+
+                <div class="p-6">
+                    <!-- Create Key Tab -->
+                    <div id="tab-create" class="tab-content">
+                        <div class="max-w-md space-y-4">
+                            <div>
+                                <label class="text-sm font-medium">Label</label>
+                                <input id="keyLabel" type="text"
+                                    class="w-full mt-1.5 px-3 py-2 bg-background border border-input rounded-md"
+                                    placeholder="Premium User">
+                            </div>
+                            <div>
+                                <label class="text-sm font-medium">Expires In</label>
+                                <select id="expirySelect"
+                                    class="w-full mt-1.5 px-3 py-2 bg-background border border-input rounded-md">
+                                    <option value="1h">1 Hour</option>
+                                    <option value="6h">6 Hours</option>
+                                    <option value="24h" selected>24 Hours</option>
+                                    <option value="7d">7 Days</option>
+                                    <option value="30d">30 Days</option>
+                                    <option value="365d">1 Year</option>
+                                </select>
+                            </div>
+                            <button id="createKeyBtn"
+                                class="w-full bg-primary text-primary-foreground px-4 py-2 rounded-md font-medium">Generate
+                                Key</button>
+                            <div id="generatedKey" class="hidden p-4 bg-muted rounded-md">
+                                <p class="text-sm font-medium mb-2">Generated Key:</p>
+                                <div class="flex gap-2">
+                                    <input id="keyOutput" readonly
+                                        class="flex-1 px-3 py-2 bg-background border rounded text-sm font-mono">
+                                    <button id="copyKeyBtn"
+                                        class="px-4 py-2 bg-secondary rounded hover:bg-secondary/80">Copy</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Active Keys Tab -->
+                    <div id="tab-keys" class="tab-content hidden">
+                        <div class="mb-4 flex justify-between items-center">
+                            <h3 class="text-lg font-bold">Active Keys</h3>
+                            <button id="refreshKeys" class="px-3 py-1 bg-secondary rounded text-sm">Refresh</button>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-sm">
+                                <thead class="border-b border-border">
+                                    <tr class="text-left">
+                                        <th class="pb-3 font-medium">Key</th>
+                                        <th class="pb-3 font-medium">Label</th>
+                                        <th class="pb-3 font-medium">HWID</th>
+                                        <th class="pb-3 font-medium">Expires At</th>
+                                        <th class="pb-3 font-medium">TTL</th>
+                                        <th class="pb-3 font-medium">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="keysTableBody" class="divide-y divide-border">
+                                    <tr>
+                                        <td colspan="6" class="py-8 text-center text-muted-foreground">Loading...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Blocked IPs Tab -->
+                    <div id="tab-blocked" class="tab-content hidden">
+                        <div class="mb-6">
+                            <h3 class="text-lg font-bold mb-4">Block New IP</h3>
+                            <div class="max-w-md flex gap-2">
+                                <input id="ipInput" type="text"
+                                    class="flex-1 px-3 py-2 bg-background border border-input rounded-md"
+                                    placeholder="123.456.789.0">
+                                <input id="blockDuration" type="number" value="24" min="1"
+                                    class="w-24 px-3 py-2 bg-background border border-input rounded-md"
+                                    placeholder="Hours">
+                                <button id="blockIpBtn"
+                                    class="px-4 py-2 bg-destructive text-destructive-foreground rounded-md font-medium">Block</button>
+                            </div>
+                        </div>
+                        <div class="border-t border-border pt-6">
+                            <div class="mb-4 flex justify-between items-center">
+                                <h3 class="text-lg font-bold">Currently Blocked</h3>
+                                <button id="refreshBlocked"
+                                    class="px-3 py-1 bg-secondary rounded text-sm">Refresh</button>
+                            </div>
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-sm">
+                                    <thead class="border-b border-border">
+                                        <tr class="text-left">
+                                            <th class="pb-3 font-medium">IP Address</th>
+                                            <th class="pb-3 font-medium">Blocked At</th>
+                                            <th class="pb-3 font-medium">Expires In</th>
+                                            <th class="pb-3 font-medium">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="blockedTableBody" class="divide-y divide-border">
+                                        <tr>
+                                            <td colspan="4" class="py-8 text-center text-muted-foreground">Loading...
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Analytics Tab -->
+                    <div id="tab-analytics" class="tab-content hidden">
+                        <div class="mb-6 flex gap-2">
+                            <select id="timeRangeSelect" class="px-3 py-2 bg-background border border-input rounded-md">
+                                <option value="hour">Last Hour</option>
+                                <option value="day" selected>Last 24 Hours</option>
+                                <option value="week">Last Week</option>
+                            </select>
+                            <button id="refreshAnalytics" class="px-4 py-2 bg-secondary rounded">Refresh</button>
+                        </div>
+                        <h3 class="text-lg font-bold mb-4">Top IPs by Request Count</h3>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-sm">
+                                <thead class="border-b border-border">
+                                    <tr class="text-left">
+                                        <th class="pb-3 font-medium">IP Address</th>
+                                        <th class="pb-3 font-medium">Total Requests</th>
+                                        <th class="pb-3 font-medium">Verify</th>
+                                        <th class="pb-3 font-medium">Get Link</th>
+                                        <th class="pb-3 font-medium">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="analyticsTableBody" class="divide-y divide-border">
+                                    <tr>
+                                        <td colspan="5" class="py-8 text-center text-muted-foreground">Loading...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div id="toast"
+        class="hidden fixed bottom-4 right-4 bg-card border border-border rounded-lg p-4 shadow-lg max-w-sm z-50">
+        <p id="toastMessage" class="text-sm"></p>
+    </div>
+
+    <script>
+        const API_BASE = 'https://tool-mc.vercel.app/api/admin';
+        let adminToken = sessionStorage.getItem('adminToken');
+
+        if (adminToken) showDashboard();
+
+        // Login
+        document.getElementById('loginBtn').addEventListener('click', async () => {
+            const password = document.getElementById('passwordInput').value;
+            const btn = document.getElementById('loginBtn');
+            if (!password) return;
+
+            btn.disabled = true;
+            btn.textContent = 'Logging in...';
+
+            try {
+                const res = await fetch(`${API_BASE}?action=auth`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ password })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    adminToken = data.token;
+                    sessionStorage.setItem('adminToken', adminToken);
+                    showDashboard();
+                } else {
+                    document.getElementById('authError').textContent = 'Invalid password';
+                    btn.disabled = false;
+                    btn.textContent = 'Login';
+                }
+            } catch (error) {
+                document.getElementById('authError').textContent = 'Network error';
+                btn.disabled = false;
+                btn.textContent = 'Login';
+            }
+        });
+
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            sessionStorage.removeItem('adminToken');
+            location.reload();
+        });
+
+        async function showDashboard() {
+            document.getElementById('authModal').classList.add('hidden');
+            document.getElementById('dashboard').classList.remove('hidden');
+            loadStats();
+            loadKeys();
+            loadBlockedIps();
+            loadAnalytics();
+        }
+
+        // Tabs
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const tabName = btn.dataset.tab;
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('border-primary'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
+                btn.classList.add('border-primary');
+                document.getElementById(`tab-${tabName}`).classList.remove('hidden');
+            });
+        });
+
+        // Load stats
+        async function loadStats() {
+            try {
+                const res = await fetch(`${API_BASE}?action=stats`, {
+                    headers: { 'Authorization': `Bearer ${adminToken}` }
+                });
+                const data = await res.json();
+                document.getElementById('activeKeys').textContent = data.activeKeys || 0;
+                document.getElementById('sharingAttempts').textContent = data.sharingAttempts || 0;
+            } catch (error) {
+                console.error('Failed to load stats:', error);
+            }
+        }
+
+        // Create key
+        document.getElementById('createKeyBtn').addEventListener('click', async () => {
+            const label = document.getElementById('keyLabel').value;
+            const expiresIn = document.getElementById('expirySelect').value;
+            const btn = document.getElementById('createKeyBtn');
+            btn.disabled = true;
+            btn.textContent = 'Creating...';
+
+            try {
+                const res = await fetch(`${API_BASE}?action=create-key`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${adminToken}`
+                    },
+                    body: JSON.stringify({ label, expiresIn })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    document.getElementById('keyOutput').value = data.key;
+                    document.getElementById('generatedKey').classList.remove('hidden');
+                    showToast('Key created!', 'success');
+                    setTimeout(() => loadKeys(), 500);
+                } else {
+                    showToast(data.error || 'Failed', 'error');
+                }
+            } catch (error) {
+                showToast('Network error', 'error');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Generate Key';
+            }
+        });
+
+        document.getElementById('copyKeyBtn').addEventListener('click', () => {
+            document.getElementById('keyOutput').select();
+            document.execCommand('copy');
+            showToast('Copied!', 'success');
+        });
+
+        // Load keys
+        async function loadKeys() {
+            try {
+                const res = await fetch(`${API_BASE}?action=keys`, {
+                    headers: { 'Authorization': `Bearer ${adminToken}` }
+                });
+                const data = await res.json();
+                const tbody = document.getElementById('keysTableBody');
+
+                if (data.keys && data.keys.length > 0) {
+                    tbody.innerHTML = data.keys.map(k => `
+                        <tr>
+                            <td class="py-3 font-mono text-xs">${k.keyPrefix}</td>
+                            <td class="py-3">${k.label || 'N/A'}</td>
+                            <td class="py-3 font-mono text-xs">${k.hwid}</td>
+                            <td class="py-3 text-xs">${new Date(k.expiresAt).toLocaleString()}</td>
+                            <td class="py-3 text-xs">${formatTTL(k.ttl)}</td>
+                            <td class="py-3"><button class="px-3 py-1 bg-destructive text-destructive-foreground rounded text-xs" onclick="deleteKey('${k.key.replace(/'/g, "\\'")}')">Delete</button></td>
+                        </tr>
+                    `).join('');
+                } else {
+                    tbody.innerHTML = '<tr><td colspan="6" class="py-8 text-center text-muted-foreground">No keys</td></tr>';
+                }
+            } catch (error) {
+                console.error('Failed to load keys:', error);
+            }
+        }
+
+        document.getElementById('refreshKeys').addEventListener('click', loadKeys);
+
+        async function deleteKey(key) {
+            if (!notify('Error', 'Delete this key?', 'error')) return;
+            try {
+                const res = await fetch(`${API_BASE}?action=delete-key`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${adminToken}`
+                    },
+                    body: JSON.stringify({ key })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    showToast('Key deleted', 'success');
+                    loadKeys();
+                    loadStats();
+                } else {
+                    showToast(data.error || 'Failed', 'error');
+                }
+            } catch (error) {
+                showToast('Network error', 'error');
+            }
+        }
+
+        // Block IP
+        document.getElementById('blockIpBtn').addEventListener('click', async () => {
+            const ip = document.getElementById('ipInput').value;
+            const duration = parseInt(document.getElementById('blockDuration').value);
+            if (!ip) return showToast('Enter IP', 'error');
+
+            try {
+                const res = await fetch(`${API_BASE}?action=block-ip`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${adminToken}`
+                    },
+                    body: JSON.stringify({ ip, duration })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    document.getElementById('ipInput').value = '';
+                    showToast('IP blocked', 'success');
+                    loadBlockedIps();
+                } else {
+                    showToast(data.error || 'Failed', 'error');
+                }
+            } catch (error) {
+                showToast('Network error', 'error');
+            }
+        });
+
+        // Load blocked IPs
+        async function loadBlockedIps() {
+            try {
+                const res = await fetch(`${API_BASE}?action=blocked-ips`, {
+                    headers: { 'Authorization': `Bearer ${adminToken}` }
+                });
+                const data = await res.json();
+                const tbody = document.getElementById('blockedTableBody');
+                document.getElementById('blockedIpsCount').textContent = data.blockedIps?.length || 0;
+
+                if (data.blockedIps && data.blockedIps.length > 0) {
+                    tbody.innerHTML = data.blockedIps.map(ip => `
+                        <tr>
+                            <td class="py-3 font-mono">${ip.ip}</td>
+                            <td class="py-3 text-xs">${new Date(Date.now() - ip.ttl * 1000).toLocaleString()}</td>
+                            <td class="py-3 countdown text-xs" data-ttl="${ip.ttl}">${formatTTL(ip.ttl)}</td>
+                            <td class="py-3"><button class="px-3 py-1 bg-secondary rounded text-xs" onclick="unblockIp('${ip.ip}')">Unblock</button></td>
+                        </tr>
+                    `).join('');
+                    startCountdown();
+                } else {
+                    tbody.innerHTML = '<tr><td colspan="4" class="py-8 text-center text-muted-foreground">No blocked IPs</td></tr>';
+                }
+            } catch (error) {
+                console.error('Failed to load blocked IPs:', error);
+            }
+        }
+
+        document.getElementById('refreshBlocked').addEventListener('click', loadBlockedIps);
+
+        async function unblockIp(ip) {
+            try {
+                const res = await fetch(`${API_BASE}?action=unblock-ip`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${adminToken}`
+                    },
+                    body: JSON.stringify({ ip })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    showToast('IP unblocked', 'success');
+                    loadBlockedIps();
+                } else {
+                    showToast(data.error || 'Failed', 'error');
+                }
+            } catch (error) {
+                showToast('Network error', 'error');
+            }
+        }
+
+        async function loadAnalytics() {
+            const timeRange = document.getElementById('timeRangeSelect').value;
+            try {
+                const res = await fetch(`${API_BASE}?action=analytics&timeRange=${timeRange}`, {
+                    headers: { 'Authorization': `Bearer ${adminToken}` }
+                });
+                const data = await res.json();
+                const tbody = document.getElementById('analyticsTableBody');
+                document.getElementById('totalRequests').textContent = data.stats?.totalRequests || 0;
+
+                if (data.topIps && data.topIps.length > 0) {
+                    tbody.innerHTML = data.topIps.map(ip => `
+                        <tr>
+                            <td class="py-3 font-mono">${ip.ip}</td>
+                            <td class="py-3 font-bold">${ip.totalRequests}</td>
+                            <td class="py-3">${ip.endpoints?.verify || 0}</td>
+                            <td class="py-3">${ip.endpoints?.['get-link'] || 0}</td>
+                            <td class="py-3"><button class="px-3 py-1 bg-destructive rounded text-xs" onclick="blockIpFromAnalytics('${ip.ip}')">Block</button></td>
+                        </tr>
+                    `).join('');
+                } else {
+                    tbody.innerHTML = '<tr><td colspan="5" class="py-8 text-center text-muted-foreground">No data</td></tr>';
+                }
+            } catch (error) {
+                console.error('Failed to load analytics:', error);
+            }
+        }
+
+        document.getElementById('refreshAnalytics').addEventListener('click', loadAnalytics);
+        document.getElementById('timeRangeSelect').addEventListener('change', loadAnalytics);
+
+        function blockIpFromAnalytics(ip) {
+            document.getElementById('ipInput').value = ip;
+            document.querySelector('[data-tab="blocked"]').click();
+        }
+
+        // TTL countdown
+        function formatTTL(seconds) {
+            if (seconds <= 0) return 'Expired';
+            const hours = Math.floor(seconds / 3600);
+            const minutes = Math.floor((seconds % 3600) / 60);
+            const secs = seconds % 60;
+            return `${hours}h ${minutes}m ${secs}s`;
+        }
+
+        function startCountdown() {
+            setInterval(() => {
+                document.querySelectorAll('.countdown').forEach(el => {
+                    let ttl = parseInt(el.dataset.ttl);
+                    if (ttl > 0) {
+                        ttl--;
+                        el.dataset.ttl = ttl;
+                        el.textContent = formatTTL(ttl);
+                    }
+                });
+            }, 1000);
+        }
+
+        // Toast
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            document.getElementById('toastMessage').textContent = message;
+            toast.classList.remove('hidden');
+            setTimeout(() => toast.classList.add('hidden'), 3000);
+        }
+
+        document.getElementById('passwordInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') document.getElementById('loginBtn').click();
+        });
+    </script>
+</body>
+
+</html>
